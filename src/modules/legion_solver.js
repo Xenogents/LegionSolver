@@ -17,16 +17,16 @@ class LegionSolver {
         }
     }
 
-    async solve() {
+    solve() {
         this.pieces.sort((a, b) => b.amount - a.amount);
-        return await this.solveInternal(0);
+        return this.solveInternal(0);
     }
 
-    async solveInternal(position) {
+    solveInternal(position) {
         this.a++;
-        console.log(this.a);
+        if (this.a % 1000 == 0)
+            console.log(this.a);
 
-        await new Promise(resolve => setTimeout(resolve, 0));
         if (this.pieces.length > 0 && this.pieces[0].amount == 0) {
             return true;
         }
@@ -37,7 +37,7 @@ class LegionSolver {
         }
     
         if (this.board[point.y][point.x] != 0) {
-            return await this.solveInternal(position + 1);
+            return this.solveInternal(position + 1);
         }
     
         for (let k = 0; k < this.pieces.length; k++) {
@@ -49,7 +49,7 @@ class LegionSolver {
                     this.placePiece(point, piece);
                     this.pieceUpdated(point, piece, true);
                     let spotsMoved = this.takeFromList(k);
-                    if (this.isValid() && await this.solveInternal(position + 1)) {
+                    if (this.isValid() && this.solveInternal(position + 1)) {
                         return true;
                     }
                     this.returnToList(k, spotsMoved);
