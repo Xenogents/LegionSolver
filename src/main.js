@@ -82,21 +82,21 @@ for (let i = 0; i < 20; i++) {
 const pieceColours = new Map();
 pieceColours.set(-1, 'white');
 for (let i = 0; i < 2; i++) {
-    pieceColours.set(1 + i * defaultPieces.length, 'red');
-    pieceColours.set(2 + i * defaultPieces.length, 'green');
+    pieceColours.set(1 + i * defaultPieces.length, 'orange');
+    pieceColours.set(2 + i * defaultPieces.length, 'lime');
     pieceColours.set(3 + i * defaultPieces.length, 'red');
-    pieceColours.set(4 + i * defaultPieces.length, 'green');
+    pieceColours.set(4 + i * defaultPieces.length, 'limegreen');
     pieceColours.set(5 + i * defaultPieces.length, 'firebrick');
-    pieceColours.set(6 + i * defaultPieces.length, 'lawngreen');
+    pieceColours.set(6 + i * defaultPieces.length, 'mediumseagreen');
     pieceColours.set(7 + i * defaultPieces.length, 'purple');
-    pieceColours.set(8 + i * defaultPieces.length, 'dodgerblue');
+    pieceColours.set(8 + i * defaultPieces.length, 'lightskyblue');
     pieceColours.set(9 + i * defaultPieces.length, 'lightgrey');
     pieceColours.set(10 + i * defaultPieces.length, 'aqua');
-    pieceColours.set(11 + i * defaultPieces.length, 'firebrick');
-    pieceColours.set(12 + i * defaultPieces.length, 'lawngreen');
-    pieceColours.set(13 + i * defaultPieces.length, 'purple');
+    pieceColours.set(11 + i * defaultPieces.length, 'maroon');
+    pieceColours.set(12 + i * defaultPieces.length, 'green');
+    pieceColours.set(13 + i * defaultPieces.length, 'indigo');
     pieceColours.set(14 + i * defaultPieces.length, 'dodgerblue');
-    pieceColours.set(15 + i * defaultPieces.length, 'lightgrey');
+    pieceColours.set(15 + i * defaultPieces.length, 'lightsteelblue');
     pieceColours.set(16 + i * defaultPieces.length, 'mediumpurple');
     
 }
