@@ -385,11 +385,11 @@ for (let i = 0; i < legionBoard.length; i++) {
 
 document.getElementById("startReset").addEventListener("click", startReset);
 
-async function startReset(evt) {
+function startReset(evt) {
     if (evt.target.innerText == "Start") {
         evt.target.innerText = "Reset";
         evt.target.disabled = true;
-        let success = await runSolver();
+        let success = runSolver();
         evt.target.disabled = false;
         if (!success) {
             document.getElementById("failText").innerText = "No Solution Exists";
@@ -412,7 +412,7 @@ function colourBoard() {
     }
 }
 
-async function runSolver() {
+function runSolver() {
     amounts = [];
     state = states.IN_PROGRESS;
     for (let i = 0; i < defaultPieces.length; i++) {
@@ -434,7 +434,7 @@ async function runSolver() {
     let a = 0;
 
     let legionSolver = new LegionSolver(legionBoard, pieces, pieceUpdated, a)
-    let success = await legionSolver.solve();
+    let success = legionSolver.solve();
 
     if (success) {
         colourBoard();
@@ -443,14 +443,14 @@ async function runSolver() {
     return success;
 }
 
-function pieceUpdated(position, piece, isPlaced) {
-    if (!isLiveSolve) {
-        return;
-    }
+// function pieceUpdated(position, piece, isPlaced) {
+//     if (!isLiveSolve) {
+//         return;
+//     }
 
-    const colour = isPlaced ? pieceColours.get(piece.id) : 'grey';
+//     const colour = isPlaced ? pieceColours.get(piece.id) : 'grey';
 
-    for (let point of piece.pointShape) {
-        getLegionCell(point.y + position.y, point.x + position.x - piece.offCenter).style.background = colour;
-    }
-}
+//     for (let point of piece.pointShape) {
+//         getLegionCell(point.y + position.y, point.x + position.x - piece.offCenter).style.background = colour;
+//     }
+// }
