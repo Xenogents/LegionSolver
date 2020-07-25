@@ -1,10 +1,10 @@
 import { Point } from './point.js';
 
 class LegionSolver {
-    constructor(board, pieces, a) {
+    constructor(board, pieces) {
         this.board = board;
         this.pieces = pieces;
-        this.a = a;
+        this.a = 0;
 
         this.middle = [];
         for (let i = 9; i < 11; i++) {

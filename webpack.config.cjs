@@ -3,9 +3,7 @@ module.exports = {
     output: {
         filename: './index.js'
     },
-    optimization: {
-        minimize: false
-    },
+    mode: 'development',
     module: {
         rules: [
             { 
