@@ -433,9 +433,10 @@ function runSolver() {
 
     let a = 0;
 
-    let legionSolver = new LegionSolver(legionBoard, pieces, pieceUpdated, a)
+    let legionSolver = new LegionSolver(legionBoard, pieces, a)
+    console.time("hi");
     let success = legionSolver.solve();
-
+    console.timeEnd("hi");
     if (success) {
         colourBoard();
     }

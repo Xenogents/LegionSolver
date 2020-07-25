@@ -1,10 +1,9 @@
 import { Point } from './point.js';
 
 class LegionSolver {
-    constructor(board, pieces, pieceUpdated, a) {
+    constructor(board, pieces, a) {
         this.board = board;
         this.pieces = pieces;
-        this.pieceUpdated = pieceUpdated;
         this.a = a;
 
         this.middle = [];
@@ -24,15 +23,12 @@ class LegionSolver {
 
     solveInternal(position) {
         this.a++;
-        if (this.a % 1000 == 0)
+        if (this.a % 10000000 == 0)
             console.log(this.a);
 
-        if (this.pieces.length > 0 && this.pieces[0].amount == 0) {
-            return true;
-        }
         let point = new Point(position % this.board[0].length, Math.floor(position / this.board[0].length));
     
-        if (point.y >= this.board.length) {
+        if (point.y >= this.board.length || this.pieces[0].amount == 0) {
             return true;
         }
     
@@ -41,20 +37,20 @@ class LegionSolver {
         }
     
         for (let k = 0; k < this.pieces.length; k++) {
+            if (this.pieces[k].amount == 0) {
+                return false;
+            }
             for (let piece of this.pieces[k].transformations) {
-                if (this.pieces[k].amount == 0) {
-                    return false;
-                }
                 if (this.isPlaceable(point, piece)) {
                     this.placePiece(point, piece);
-                    this.pieceUpdated(point, piece, true);
+                    //this.pieceUpdated(point, piece, true);
                     let spotsMoved = this.takeFromList(k);
-                    if (this.isValid() && this.solveInternal(position + 1)) {
+                    if (this.solveInternal(position + 1)) {
                         return true;
                     }
                     this.returnToList(k, spotsMoved);
                     this.takeBackPiece(point, piece);
-                    this.pieceUpdated(point, piece, false);
+                    //this.pieceUpdated(point, piece, false);
                 }
             }
         }
@@ -63,20 +59,17 @@ class LegionSolver {
 
     takeFromList(placement) {
         this.pieces[placement].amount--;
-        if (placement == this.pieces.length - 1) {
+
+        let fill = this.pieces[placement];
+        if (fill.amount >= this.pieces[placement + 1].amount || placement == this.pieces.length - 1) {
             return 0;
         }
-    
-        let fill = this.pieces[placement];
-        if (this.pieces[placement].amount >= this.pieces[placement + 1].amount) {
-            return 0;
-        } else {
-            for (let i = placement + 1; i < this.pieces.length; i++) {
-                if (this.pieces[placement].amount >= this.pieces[i].amount) {
-                    this.pieces[placement] = this.pieces[i - 1];
-                    this.pieces[i - 1] = fill;
-                    return i - 1 - placement;
-                }
+
+        for (let i = placement + 1; i < this.pieces.length; i++) {
+            if (this.pieces[placement].amount >= this.pieces[i].amount) {
+                this.pieces[placement] = this.pieces[i - 1];
+                this.pieces[i - 1] = fill;
+                return i - 1 - placement;
             }
         }
     
@@ -108,16 +101,20 @@ class LegionSolver {
     
     isPlaceable(position, piece) {
         for (let point of piece.pointShape) {
-            if ((point.y + position.y) > this.board.length - 1
-                || (point.x + position.x - piece.offCenter > this.board[0].length - 1
-                || (point.y + position.y) < 0
-                || (point.x + position.x - piece.offCenter < 0
-                || this.board[point.y + position.y][point.x + position.x - piece.offCenter] != 0))) {
-                return false;
+            let x = point.x + position.x - piece.offCenter;
+            let y = point.y + position.y;
+            if (
+                y >= this.board.length
+                || y < 0
+                || x >= this.board[0].length
+                || x < 0
+                || this.board[y][x] != 0) {
+            return false;
             }
         }
         return true;
     }
+
 
     placePiece(position, piece) {
         for (let point of piece.pointShape) {
