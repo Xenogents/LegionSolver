@@ -431,9 +431,7 @@ function runSolver() {
         return false;
     }
 
-    let a = 0;
-
-    let legionSolver = new LegionSolver(legionBoard, pieces, a)
+    let legionSolver = new LegionSolver(legionBoard, pieces)
     console.time("hi");
     let success = legionSolver.solve();
     console.timeEnd("hi");
@@ -444,14 +442,14 @@ function runSolver() {
     return success;
 }
 
-// function pieceUpdated(position, piece, isPlaced) {
-//     if (!isLiveSolve) {
-//         return;
-//     }
+function pieceUpdated(position, piece, isPlaced) {
+    if (!isLiveSolve) {
+        return;
+    }
 
-//     const colour = isPlaced ? pieceColours.get(piece.id) : 'grey';
+    const colour = isPlaced ? pieceColours.get(piece.id) : 'grey';
 
-//     for (let point of piece.pointShape) {
-//         getLegionCell(point.y + position.y, point.x + position.x - piece.offCenter).style.background = colour;
-//     }
-// }
+    for (let point of piece.pointShape) {
+        getLegionCell(point.y + position.y, point.x + position.x - piece.offCenter).style.background = colour;
+    }
+}
