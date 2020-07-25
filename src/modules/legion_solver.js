@@ -5,15 +5,17 @@ class LegionSolver {
         this.board = board;
         this.pieces = pieces;
         this.a = 0;
+        this.pieceLength = pieces.length;
 
         this.middle = [];
         for (let i = 9; i < 11; i++) {
             for (let j = 10; j < 12; j++) {
                 if (this.board[i][j] != -1) {
-                    this.middle.push(new Point(i, j));
+                    this.middle.push(new Point(j, i));
                 }
             }
         }
+        console.log(this.middle);
 
         this.emptySpot = [];
         for (let i = 0; i < board.length; i++) {
@@ -44,7 +46,7 @@ class LegionSolver {
             return this.solveInternal(position + 1);
         }
     
-        for (let k = 0; k < this.pieces.length; k++) {
+        for (let k = 0; k < this.pieceLength; k++) {
             if (this.pieces[k].amount == 0) {
                 return false;
             }
@@ -53,7 +55,7 @@ class LegionSolver {
                     this.placePiece(point, piece);
                     //this.pieceUpdated(point, piece, true);
                     let spotsMoved = this.takeFromList(k);
-                    if (this.solveInternal(position + 1)) {
+                    if (this.isValid() && this.solveInternal(position + 1)) {
                         return true;
                     }
                     this.returnToList(k, spotsMoved);
@@ -69,11 +71,11 @@ class LegionSolver {
         this.pieces[placement].amount--;
 
         let fill = this.pieces[placement];
-        if (fill.amount >= this.pieces[placement + 1].amount || placement == this.pieces.length - 1) {
+        if (fill.amount >= this.pieces[placement + 1].amount || placement == this.pieceLength - 1) {
             return 0;
         }
 
-        for (let i = placement + 1; i < this.pieces.length; i++) {
+        for (let i = placement + 1; i < this.pieceLength; i++) {
             if (this.pieces[placement].amount >= this.pieces[i].amount) {
                 this.pieces[placement] = this.pieces[i - 1];
                 this.pieces[i - 1] = fill;
@@ -81,9 +83,9 @@ class LegionSolver {
             }
         }
     
-        this.pieces[placement] = this.pieces[this.pieces.length - 1];
-        this.pieces[this.pieces.length - 1] = fill;
-        return this.pieces.length - 1 - placement;
+        this.pieces[placement] = this.pieces[this.pieceLength - 1];
+        this.pieces[this.pieceLength - 1] = fill;
+        return this.pieceLength - 1 - placement;
     }
 
     returnToList(placement, spotsMoved) {
@@ -99,11 +101,10 @@ class LegionSolver {
         
         let normalPieces = 0;
         for (let point of this.middle) {
-            if (this.board[point.x][point.y] > 0 && this.board[point.x][point.y] <= this.pieces.length) {
+            if (this.board[point.y][point.x] > 0 && this.board[point.y][point.x] <= this.pieceLength) {
                 normalPieces++;
             }
         }
-    
         return normalPieces != this.middle.length;
     }
     
