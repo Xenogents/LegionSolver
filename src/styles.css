@@ -1,0 +1,84 @@
+body {
+    display: flex;
+    flex-direction: column;
+}
+
+#title {
+    text-align: center;
+}
+
+#legionBoard {
+    border-spacing: 0;
+    border-collapse: collapse;
+}
+
+#legionBoard td.legionCell {
+    width: 24px;
+    height: 27px;
+    border-style: solid;
+    border-width: 1px;
+}
+
+#legion {
+    display: flex;
+    flex-direction: column;
+}
+
+#legionFooter {
+    margin-top: 10px;
+}
+
+#options {
+    display: flex;
+    justify-content: flex-end;
+}
+
+#middlelabels {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+#pieceForm {
+    padding-right: 20px;
+}
+
+#pieceForm td.pieceCell {
+    width: 8px;
+    height: 10px;
+    border-style: solid;
+    border-width: 0px;
+}
+
+#pieceForm > form > div {
+    display: flex;
+    flex-direction: row;
+    margin-bottom: 15px;
+    justify-content: flex-end;
+}
+
+#failText {
+    text-align: right;
+}
+
+#bigClick, #liveSolve {
+    margin-left: 20px;
+}
+
+#pieceForm input {
+    width: 50px;
+    height: 20px;
+    margin-left: 10px;
+}
+
+.centerMiddleChild {
+    display: flex;
+}
+
+.centerMiddleChild > :nth-child(1), .centerMiddleChild > :nth-child(3) {
+    flex: 1;
+}
+
+#instructions {
+    margin-left: 30px;
+}
