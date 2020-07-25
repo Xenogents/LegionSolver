@@ -1,0 +1,42 @@
+<html>
+<head>
+  <script src="./dist/index.js" async></script>
+</head>
+
+<body>
+  <h1 id="title">Legion Solver</h1>
+  <div id="legionWrapper" class="centerMiddleChild">
+    <div id="pieceForm">
+      <form></form>
+    </div>
+    <div id="legion">
+      <table id="legionBoard">
+        <tbody></tbody>
+      </table>
+      <div id="legionFooter" class="centerMiddleChild">
+        <div id="labels">
+          <div id="currentPieces">Spaces to be Filled: 0</div>
+          <div id="boardFilled">Board Spaces Filled: 0</div>
+        </div>
+        <div id = "middlelabels">
+          <button id="startReset">Start</button>
+          <div id="failText"></div>
+        </div>
+        <div id="options">
+          <input type="checkbox" id="bigClick"></input>
+          <label for="bigClick">Region Click</label>
+          <input type="checkbox" id="liveSolve"></input>
+          <label for="liveSolve">Live Solve</label>
+        </div>
+      </div>
+    </div>
+    <div id="instructions" style = 'font-size:20px'>Instructions:
+      <div id="paragraph" style = 'font-size:16px'>
+        <p>1. Click the grid spaces you want to be filled, the region click will help you fill it in faster.</p>
+        <p>2. Input the amount of each shape you want to be filled in the board.</p>
+        <p>3. The space that the pieces take up should equal the amount of grid spaces you filled.</p>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
