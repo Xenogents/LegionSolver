@@ -14,6 +14,15 @@ class LegionSolver {
                 }
             }
         }
+
+        this.emptySpot = [];
+        for (let i = 0; i < board.length; i++) {
+            for (let j = 0; j < board[0].length; j++) {
+                if (board[i][j] == 0) {
+                    this.emptySpot.push(new Point(j, i));
+                }
+            }
+        }
     }
 
     solve() {
@@ -22,16 +31,15 @@ class LegionSolver {
     }
 
     solveInternal(position) {
-        this.a++;
-        if (this.a % 10000000 == 0)
-            console.log(this.a);
+        // this.a++;
+        // if (this.a % 10000000 == 0)
+        //     console.log(this.a);
 
-        let point = new Point(position % this.board[0].length, Math.floor(position / this.board[0].length));
-    
-        if (point.y >= this.board.length || this.pieces[0].amount == 0) {
+        if (position >= this.emptySpot.length || this.pieces[0].amount == 0) {
             return true;
         }
-    
+        let point = this.emptySpot[position];
+
         if (this.board[point.y][point.x] != 0) {
             return this.solveInternal(position + 1);
         }
