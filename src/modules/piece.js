@@ -27,7 +27,7 @@ class Piece {
         Object.defineProperty(this, "offCenter", { value: 0, writable: true });
         
         for (let i = 0; i < this.shape[0].length; i++) {
-            if (this.shape[0][i] == 1) {
+            if (this.shape[0][i] != 0) {
                 this.offCenter = i;
                 break;
             }

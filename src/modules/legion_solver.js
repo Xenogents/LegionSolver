@@ -78,6 +78,7 @@ class LegionSolver {
 
             this.iterations++;
             if (this.iterations % batchSize == 0) {
+                console.log(this.iterations);
                 this.onBoardUpdated();
                 await new Promise(resolve => setTimeout(resolve, 0));
             }
