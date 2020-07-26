@@ -7,7 +7,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "underscore": "^1.10.2"
+    "lodash": "^4.17.19"
   },
   "devDependencies": {
     "@babel/core": "^7.10.5",
