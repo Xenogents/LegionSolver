@@ -432,9 +432,9 @@ function runSolver() {
     }
 
     let legionSolver = new LegionSolver(legionBoard, pieces)
-    console.time("hi");
+    console.time("solve");
     let success = legionSolver.solve();
-    console.timeEnd("hi");
+    console.timeEnd("solve");
     if (success) {
         colourBoard();
     }
