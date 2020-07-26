@@ -1,12 +1,12 @@
 import { Point } from './point.js';
-import { isEmpty } from 'underscore';
 import { Piece } from './piece.js';
 
 class LegionSolver {
-    constructor(board, pieces) {
+    constructor(board, pieces, onBoardUpdated) {
         this.board = board;
         this.pieces = pieces;
-        this.a = 0;
+        this.onBoardUpdated = onBoardUpdated;
+        this.iterations = 0;
         this.pieceLength = pieces.length;
 
         this.middle = [];
@@ -28,13 +28,13 @@ class LegionSolver {
         }
     }
 
-    solve() {
+    async solve() {
         this.pieces.sort((a, b) => b.amount - a.amount);
         this.pieces.push(new Piece([[]], 0, -5));
-        return this.solveInternal();
+        return await this.solveInternal();
     }
 
-    solveInternal() {
+    async solveInternal(batchSize=1000000) {
         let stack = [];
         let pieceNumber = 0;
         let transformationNumber = 0;
@@ -74,6 +74,12 @@ class LegionSolver {
                     pieceNumber++;
                     transformationNumber = 0;
                 }
+            }
+
+            this.iterations++;
+            if (this.iterations % batchSize == 0) {
+                this.onBoardUpdated();
+                await new Promise(resolve => setTimeout(resolve, 0));
             }
         }
         return true;
