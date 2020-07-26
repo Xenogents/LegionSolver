@@ -18,15 +18,15 @@ const defaultPieces = [
         [1, 2, 1]
     ],
     [
+        [1, 0, 0],
+        [1, 2, 1]
+    ],
+    [
         [2, 1],
         [1, 1]
     ],
     [
         [1, 2, 1, 1]
-    ],
-    [
-        [1, 0, 0],
-        [1, 2, 1]
     ],
     [
         [0, 1, 0],
@@ -81,6 +81,7 @@ for (let i = 0; i < 20; i++) {
 
 const pieceColours = new Map();
 pieceColours.set(-1, 'white');
+pieceColours.set(0, 'grey');
 for (let i = 0; i < 2; i++) {
     pieceColours.set(1 + i * defaultPieces.length, 'orange');
     pieceColours.set(2 + i * defaultPieces.length, 'lime');
