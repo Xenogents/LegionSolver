@@ -1,5 +1,5 @@
 import { Point } from './point.js';
-import _ from 'underscore';
+import _ from 'lodash';
 
 class Piece {
     constructor(shape, amount, id) {
@@ -36,7 +36,7 @@ class Piece {
     }
 
     get transformations() {
-        Object.defineProperty(this, "transformations", { value: []});
+        Object.defineProperty(this, "transformations", { value: [], writable: true});
 
         let shape = [...this.shape];
         let newGrid;
@@ -65,15 +65,7 @@ class Piece {
             shape = newGrid;
         }
 
-        for (let i = 0; i < this.transformations.length - 1; i++) {
-            for (let j = i + 1; j < this.transformations.length; j++) {
-                if (_.isEqual(this.transformations[i], this.transformations[j])) {
-                    this.transformations.splice(j,1);
-                    j--;
-                }
-            }
-        }
-
+        this.transformations = _.unionWith(this.transformations, _.isEqual);
         return this.transformations;
     }
 

@@ -3,12 +3,13 @@ import { Piece } from './modules/piece.js';
 import { Point } from './modules/point.js';
 import { LegionSolver } from './modules/legion_solver.js';
 
+// TODO: Remove extra 2s.
 const defaultPieces = [
     [
         [2]
     ],
     [
-        [2, 1]
+        [2, 2]
     ],
     [
         [1, 0],
@@ -22,18 +23,18 @@ const defaultPieces = [
         [1, 2, 1]
     ],
     [
-        [2, 1],
-        [1, 1]
+        [2, 2],
+        [2, 2]
     ],
     [
-        [1, 2, 1, 1]
+        [1, 2, 2, 1]
     ],
     [
         [0, 1, 0],
         [1, 2, 1]
     ],
     [
-        [1, 1, 0],
+        [1, 2, 0],
         [0, 2, 1]
     ],
     [
@@ -434,6 +435,7 @@ async function runSolver() {
     console.time("solve");
     let success = await legionSolver.solve();
     console.timeEnd("solve");
+    console.log("iterations: " + legionSolver.iterations);
     if (success) {
         colourBoard();
     }
