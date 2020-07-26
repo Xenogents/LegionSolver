@@ -248,14 +248,6 @@ function activateLiveSolve() {
     isLiveSolve = !isLiveSolve;
     if (isLiveSolve) {
         colourBoard();
-    } else {
-        for (let i = 0; i < legionBoard.length; i++) {
-            for (let j = 0; j < legionBoard[0].length; j++) {
-                if (legionBoard[i][j] != -1) {
-                    getLegionCell(i, j).style.background = 'grey';
-                }
-            }
-        }
     }
 }
 
@@ -385,11 +377,11 @@ for (let i = 0; i < legionBoard.length; i++) {
 
 document.getElementById("startReset").addEventListener("click", startReset);
 
-function startReset(evt) {
+async function startReset(evt) {
     if (evt.target.innerText == "Start") {
         evt.target.innerText = "Reset";
         evt.target.disabled = true;
-        let success = runSolver();
+        let success = await runSolver();
         evt.target.disabled = false;
         if (!success) {
             document.getElementById("failText").innerText = "No Solution Exists";
@@ -412,7 +404,13 @@ function colourBoard() {
     }
 }
 
-function runSolver() {
+function onBoardUpdated() {
+    if (isLiveSolve) {
+        colourBoard();
+    }
+}
+
+async function runSolver() {
     amounts = [];
     state = states.IN_PROGRESS;
     for (let i = 0; i < defaultPieces.length; i++) {
@@ -431,25 +429,13 @@ function runSolver() {
         return false;
     }
 
-    let legionSolver = new LegionSolver(legionBoard, pieces)
+    let legionSolver = new LegionSolver(legionBoard, pieces, onBoardUpdated);
     console.time("solve");
-    let success = legionSolver.solve();
+    let success = await legionSolver.solve();
     console.timeEnd("solve");
     if (success) {
         colourBoard();
     }
     state = states.COMPLETED;
     return success;
-}
-
-function pieceUpdated(position, piece, isPlaced) {
-    if (!isLiveSolve) {
-        return;
-    }
-
-    const colour = isPlaced ? pieceColours.get(piece.id) : 'grey';
-
-    for (let point of piece.pointShape) {
-        getLegionCell(point.y + position.y, point.x + position.x - piece.offCenter).style.background = colour;
-    }
 }
