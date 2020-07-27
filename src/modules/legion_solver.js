@@ -1,6 +1,7 @@
 import { Point } from './point.js';
 import { Piece } from './piece.js';
 
+
 class LegionSolver {
     constructor(board, pieces, onBoardUpdated) {
         this.board = board;

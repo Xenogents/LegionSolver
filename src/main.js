@@ -2,6 +2,7 @@ import './styles.css';
 import { Piece } from './modules/piece.js';
 import { Point } from './modules/point.js';
 import { LegionSolver } from './modules/legion_solver.js';
+import { LegionBoard } from './modules/board.js';
 
 // TODO: Remove extra 2s.
 
@@ -72,46 +73,16 @@ const defaultPieces = [
 
 let pieces = [];
 let amounts = [];
- 
-let legionBoard = JSON.parse(localStorage.getItem("legionBoard"));
 
-if (!legionBoard) {
-    legionBoard = [];
-    for (let i = 0; i < 20; i++) {
-        legionBoard[i] = [];
-        for (let j = 0; j < 22; j++) {
-            legionBoard[i][j] = -1;
-        }
-    }
-}
+let legionBoard = new LegionBoard(board);
 
-const pieceColours = new Map();
-pieceColours.set(-1, 'white');
-pieceColours.set(0, 'grey');
-for (let i = 0; i < 2; i++) {
-    pieceColours.set(1 + i * defaultPieces.length, 'orange');
-    pieceColours.set(2 + i * defaultPieces.length, 'lime');
-    pieceColours.set(3 + i * defaultPieces.length, 'red');
-    pieceColours.set(4 + i * defaultPieces.length, 'limegreen');
-    pieceColours.set(5 + i * defaultPieces.length, 'firebrick');
-    pieceColours.set(6 + i * defaultPieces.length, 'mediumseagreen');
-    pieceColours.set(7 + i * defaultPieces.length, 'purple');
-    pieceColours.set(8 + i * defaultPieces.length, 'lightskyblue');
-    pieceColours.set(9 + i * defaultPieces.length, 'lightgrey');
-    pieceColours.set(10 + i * defaultPieces.length, 'aqua');
-    pieceColours.set(11 + i * defaultPieces.length, 'maroon');
-    pieceColours.set(12 + i * defaultPieces.length, 'green');
-    pieceColours.set(13 + i * defaultPieces.length, 'indigo');
-    pieceColours.set(14 + i * defaultPieces.length, 'dodgerblue');
-    pieceColours.set(15 + i * defaultPieces.length, 'lightsteelblue');
-    pieceColours.set(16 + i * defaultPieces.length, 'mediumpurple');
-    
-}
-
-const row = '<td class="legionCell"></td>'.repeat(legionBoard[0].length);
-for (let i = 0; i < legionBoard.length; i++) {
+const row = '<td class="legionCell"></td>'.repeat(legionBoard.board[0].length);
+for (let i = 0; i < legionBoard.board.length; i++) {
     document.querySelector('#legionBoard tbody').innerHTML += `<tr>${row}</tr>`;
 }
+
+legionBoard.setLegionBorders();
+legionBoard.setLegionGroups();
 
 for (let i = 0; i < defaultPieces.length; i++) {
     let row = '<td class="pieceCell"></td>'.repeat(defaultPieces[i][0].length);
@@ -133,7 +104,7 @@ for (let i = 0; i < defaultPieces.length; i++) {
             if (defaultPieces[i][j][k] != 0) {
                 document.getElementById(`pieceDisplay${i+1}`)
                 .getElementsByTagName("tr")[j]
-                .getElementsByTagName("td")[k].style.background = pieceColours.get(i+1);
+                .getElementsByTagName("td")[k].style.background = legionBoard.pieceColours.get(i+1);
             }
         }
     }
@@ -141,86 +112,12 @@ for (let i = 0; i < defaultPieces.length; i++) {
 
 document.getElementById('pieceForm').addEventListener("input", updateCurrentPieces);
 
-let legionGroups = [];
-for (let i = 0; i < 16; i++) {
-    legionGroups[i] = [];
-}
-
-for (let i = 0; i < legionBoard.length / 4; i++) {
-    for (let j = i; j < legionBoard.length / 2; j++) {
-        legionGroups[0].push(new Point(j, i));
-        legionGroups[1].push(new Point(i, j + 1))
-        legionGroups[2].push(new Point(i, legionBoard[0].length - 2 - j))
-        legionGroups[3].push(new Point(j, legionBoard[0].length - 1 - i))
-        legionGroups[4].push(new Point(legionBoard.length - 1 - j, legionBoard[0].length - 1 - i))
-        legionGroups[5].push(new Point(legionBoard.length - 1 - i, legionBoard[0].length - 2 - j))
-        legionGroups[6].push(new Point(legionBoard.length - 1 - i, j + 1))
-        legionGroups[7].push(new Point(legionBoard.length - 1 - j, i))
-    }
-}
-
-for (let i = legionBoard.length / 4; i < legionBoard.length / 2; i++) {
-    for (let j = i; j < legionBoard.length / 2; j++) {
-        legionGroups[8].push(new Point(j, i));
-        legionGroups[9].push(new Point(i, j + 1));
-        legionGroups[10].push(new Point(3 * legionBoard.length / 4 - 1 - j, legionBoard.length / 4 + 1 + i));
-        legionGroups[11].push(new Point(j, legionBoard[0].length - 1 - i));
-        legionGroups[12].push(new Point(legionBoard.length - 1 - j, legionBoard[0].length - 1 - i));
-        legionGroups[13].push(new Point(j + legionBoard.length / 4, i + legionBoard.length / 4 + 1));
-        legionGroups[14].push(new Point(j + legionBoard.length / 4, 3 * legionBoard.length / 4 - i));
-        legionGroups[15].push(new Point(legionBoard.length - j - 1, i));
-    }
-}
-
-
-for (let i = 0; i < legionBoard[0].length / 2; i++) {
-    getLegionCell(i, i).style.borderTopWidth = '3px';
-    getLegionCell(i, i).style.borderRightWidth = '3px';
-    getLegionCell(legionBoard.length - i - 1, i).style.borderBottomWidth = '3px';
-    getLegionCell(legionBoard.length - i - 1, i).style.borderRightWidth = '3px';
-    getLegionCell(i, legionBoard[0].length - i - 1).style.borderTopWidth = '3px';
-    getLegionCell(i, legionBoard[0].length - i - 1).style.borderLeftWidth = '3px';
-    getLegionCell(legionBoard.length - i - 1, legionBoard[0].length - i - 1).style.borderBottomWidth = '3px';
-    getLegionCell(legionBoard.length - i - 1, legionBoard[0].length - i - 1).style.borderLeftWidth = '3px';
-}
-
-for (let i = 0; i < legionBoard.length; i++) {
-    getLegionCell(i, 0).style.borderLeftWidth = '3px';
-    getLegionCell(i, legionBoard[0].length / 2).style.borderLeftWidth = '3px';
-    getLegionCell(i, legionBoard[0].length - 1).style.borderRightWidth = '3px';
-}
-
-for (let i = 0; i < legionBoard[0].length; i++) {
-    getLegionCell(0, i).style.borderTopWidth = '3px';
-    getLegionCell(legionBoard.length / 2, i).style.borderTopWidth = '3px';
-    getLegionCell(legionBoard.length - 1, i).style.borderBottomWidth = '3px';
-}
-
-for (let i = legionBoard.length / 4; i < 3 * legionBoard.length / 4; i++) {
-    getLegionCell(i, Math.floor(legionBoard[0].length / 4)).style.borderLeftWidth = '3px';
-    getLegionCell(i, Math.floor(3 * legionBoard[0].length / 4)).style.borderRightWidth = '3px';
-}
-
-for (let i = Math.ceil(legionBoard[0].length / 4); i < Math.floor(3 * legionBoard[0].length / 4); i++) {
-    getLegionCell(legionBoard.length / 4, i).style.borderTopWidth = '3px';
-    getLegionCell(3 * legionBoard.length / 4, i).style.borderTopWidth = '3px';   
-}
-
 let currentPieces;
 if (localStorage.getItem("currentPieces")) {
     currentPieces = JSON.parse(localStorage.getItem("currentPieces"));
     document.getElementById('currentPieces').innerText = `Spaces to be Filled: ${currentPieces}`;
 } else {
     currentPieces = 0;
-}
-
-let boardFilled;
-if (localStorage.getItem("boardFilled")) {
-    console.log("hi");
-    boardFilled = JSON.parse(localStorage.getItem("boardFilled"));
-    document.getElementById('boardFilled').innerText = `Board Spaces Filled: ${boardFilled}`;
-} else {
-    boardFilled = 0;
 }
 
 function updateCurrentPieces() {
@@ -257,64 +154,7 @@ function updateCurrentPieces() {
     document.getElementById('currentPieces').innerText = `Spaces to be Filled: ${currentPieces}`;
 }
 
-const states = {
-    START: 'start',
-    IN_PROGRESS: 'in_progress',
-    COMPLETED: 'completed',
-}
-
-let state = states.START;
-let isBigClick;
-if (localStorage.getItem("isBigClick")) {
-    document.getElementById("bigClick").checked = JSON.parse(localStorage.getItem("isBigClick"));
-    if (JSON.parse(localStorage.getItem("isBigClick"))) {
-        activateBigClick();
-    }
-
-} else {
-    isBigClick = false;
-}
-
-let isLiveSolve;
-if (localStorage.getItem("isLiveSolve")) {
-    document.getElementById("liveSolve").checked = JSON.parse(localStorage.getItem("isLiveSolve"));
-    if (JSON.parse(localStorage.getItem("isLiveSolve"))) {
-        activateLiveSolve();
-    }
-} else {
-    isLiveSolve = false;
-}
-
-document.getElementById("bigClick").addEventListener("click", activateBigClick);
-document.getElementById("liveSolve").addEventListener("click", activateLiveSolve);
-document.getElementById("clearBoard").addEventListener("click", clearBoard);
 document.getElementById("clearPieces").addEventListener("click", clearPieces);
-
-function activateBigClick() {
-    isBigClick = !isBigClick;
-    localStorage.setItem("isBigClick", JSON.stringify(isBigClick));
-}
-
-function activateLiveSolve() {
-    isLiveSolve = !isLiveSolve;
-    localStorage.setItem("isLiveSolve", JSON.stringify(isLiveSolve));
-    if (isLiveSolve) {
-        colourBoard();
-    }
-}
-
-function clearBoard() {
-    for (let i = 0; i < legionBoard.length; i++) {
-        for (let j = 0; j < legionBoard[0].length; j++) {
-            legionBoard[i][j] = -1;
-            getLegionCell(i, j).style.background = pieceColours.get(legionBoard[i][j])
-        }
-    }
-    boardFilled = 0;
-    localStorage.setItem("legionBoard", JSON.stringify(legionBoard));
-    localStorage.setItem("boardFilled", JSON.stringify(0));
-    document.getElementById('boardFilled').innerText = `Board Spaces Filled: ${boardFilled}`;
-}
 
 function clearPieces() {
     let pieceStorage = []
@@ -323,136 +163,20 @@ function clearPieces() {
         pieceStorage.push("0");
     }
     currentPieces = 0;
-    console.log(pieceStorage);
     localStorage.setItem("pieceStorage", JSON.stringify(pieceStorage));
     localStorage.setItem("currentPieces", JSON.stringify(0));
     document.getElementById('currentPieces').innerText = `Spaces to be Filled: ${currentPieces}`;
 }
 
-function getLegionCell(i, j) {
-    return document.getElementById("legionBoard")
-    .getElementsByTagName("tr")[i]
-    .getElementsByTagName("td")[j];
-}
-
-function findGroupNumber(i, j) {
-    for (let k = 0; k < legionGroups.length; k++) {
-        for (let point of legionGroups[k]) {
-            if (point.x == i && point.y == j) {
-                return k;
-            }
-        }
-    }
-}
-
-function clickBoard(i, j) {
-    if (state != states.START) {
-        return;
-    }
-    if (isBigClick) {
-        if (legionBoard[i][j] == -1) {
-            for (let point of legionGroups[findGroupNumber(i, j)]) {
-                let grid = getLegionCell(point.x, point.y);
-                grid.style.background = 'grey';
-                if (legionBoard[point.x][point.y] == -1) {
-                    boardFilled++;
-                }
-                legionBoard[point.x][point.y] = 0;
-            }
-        } else {
-            for (let point of legionGroups[findGroupNumber(i, j)]) {
-                let grid = getLegionCell(point.x, point.y);
-                grid.style.background = 'white';
-                if (legionBoard[point.x][point.y] == 0) {
-                    boardFilled--;
-                }
-                legionBoard[point.x][point.y] = -1;
-            }
-        }
-    } else {
-        let grid = getLegionCell(i, j);
-        if (legionBoard[i][j] == 0) {
-            legionBoard[i][j] = -1;
-            grid.style.background = 'white';
-            boardFilled--;
-        } else {
-            legionBoard[i][j] = 0;
-            grid.style.background = 'grey';
-            boardFilled++;
-        }
-    }
-    localStorage.setItem("legionBoard", JSON.stringify(legionBoard));
-    localStorage.setItem("boardFilled", JSON.stringify(boardFilled));
-    document.getElementById('boardFilled').innerText = `Board Spaces Filled: ${boardFilled}`;
-}
-
-function hoverOverBoard(i, j) {
-    if (state != states.START) {
-        return;
-    }
-    if (isBigClick) {
-        for (let point of legionGroups[findGroupNumber(i, j)]) {
-            if (legionBoard[point.x][point.y] == -1) {
-                getLegionCell(point.x, point.y).style.background = 'silver';
-            } else {
-                getLegionCell(point.x, point.y).style.background = 'dimgrey';
-            }
-
-        }
-    } else {
-        if (legionBoard[i][j] == -1) {
-            getLegionCell(i, j).style.background = 'silver';
-        } else {
-            getLegionCell(i, j).style.background = 'dimgrey';
-        }
-
-    }
-} 
-
-function hoverOffBoard(i, j) {
-    if (state != states.START) {
-        return;
-    }
-    if (isBigClick) {
-        for (let point of legionGroups[findGroupNumber(i, j)]) {
-            if (legionBoard[point.x][point.y] == -1) {
-                getLegionCell(point.x, point.y).style.background = 'white';
-            } else {
-                getLegionCell(point.x, point.y).style.background = 'grey';
-            }
-        }
-    } else {
-        if (legionBoard[i][j] == -1) {
-            getLegionCell(i, j).style.background = 'white';
-        } else {
-            getLegionCell(i, j).style.background = 'grey';
-        }
-        
-    }
-}
-
-function resetBoard() {
-    state = states.START;
-    for (let i = 0; i < legionBoard.length; i++) {
-        for (let j = 0; j < legionBoard[0].length; j++) {
-            if (legionBoard[i][j] > 0) {
-                getLegionCell(i, j).style.background = 'grey';
-                legionBoard[i][j] = 0;
-            }
-        }
-    }
-}
-
-for (let i = 0; i < legionBoard.length; i++) {
-    for (let j = 0; j < legionBoard[0].length; j++) {
-        let grid = getLegionCell(i, j)
-        grid.addEventListener("click", function() {clickBoard(i, j);});
-        grid.addEventListener("mouseover", function() {hoverOverBoard(i, j)});
-        grid.addEventListener("mouseout", function() {hoverOffBoard(i, j)});
+for (let i = 0; i < legionBoard.board.length; i++) {
+    for (let j = 0; j < legionBoard.board[0].length; j++) {
+        let grid = legionBoard.getLegionCell(i, j)
+        grid.addEventListener("click", function() {legionBoard.clickBoard(i, j);});
+        grid.addEventListener("mouseover", function() {legionBoard.hoverOverBoard(i, j)});
+        grid.addEventListener("mouseout", function() {legionBoard.hoverOffBoard(i, j)});
         grid.style.background = 'white';
     }
 }
-
 
 document.getElementById("startReset").addEventListener("click", startReset);
 
@@ -467,33 +191,21 @@ async function startReset(evt) {
             document.getElementById("failText").innerText = "No Solution Exists";
         }
     } else {
-        resetBoard();
         document.getElementById("clearBoard").disabled = false;
         document.getElementById("failText").innerText = "";
         evt.target.innerText = "Start";
     }
 }
 
-function colourBoard() {
-    let spot;
-
-    for (let i = 0; i < legionBoard.length; i++) {
-        for (let j = 0; j < legionBoard[0].length; j++) {
-            spot = legionBoard[i][j];
-            getLegionCell(i, j).style.background = pieceColours.get(spot);
-        }
-    }
-}
-
 function onBoardUpdated() {
-    if (isLiveSolve) {
-        colourBoard();
+    if (legionBoard.isLiveSolve()) {
+        legionBoard.colourBoard();
     }
 }
 
 async function runSolver() {
     amounts = [];
-    state = states.IN_PROGRESS;
+    legionBoard.state = legionBoard.states.IN_PROGRESS;
     for (let i = 0; i < defaultPieces.length; i++) {
         let input = document.getElementById(`piece${i+1}`).value;
         if (input == "") {
@@ -506,24 +218,24 @@ async function runSolver() {
         pieces[i] = new Piece(defaultPieces[i], amounts[i], i + 1);
     }
     
-    if (boardFilled == 0 && currentPieces > 0) {
+    if (legionBoard.boardFilled == 0 && currentPieces > 0) {
         return false;
     }
 
-    let legionSolver = new LegionSolver(legionBoard, pieces, onBoardUpdated);
+    let legionSolver = new LegionSolver(legionBoard.board, pieces, onBoardUpdated);
     console.time("solve");
     let success = await legionSolver.solve();
     console.timeEnd("solve");
     console.log("iterations: " + legionSolver.iterations);
     if (success) {
-        colourBoard();
+        legionBoard.colourBoard();
     }
-    state = states.COMPLETED;
+    legionBoard.state = legionBoard.states.COMPLETED;
     return success;
 }
 
 window.onload = function() {
-    colourBoard();
+    legionBoard.colourBoard();
     let fill = JSON.parse(localStorage.getItem("pieceStorage"))
     if (fill) {
         for (let i = 0; i < defaultPieces.length; i++) {

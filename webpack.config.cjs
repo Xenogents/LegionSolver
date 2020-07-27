@@ -9,11 +9,14 @@ module.exports = {
             { 
                 test: /\.js$/, 
                 exclude: /node_modules/,
-                use: 'babel-loader' 
+                loader: 'babel-loader',
+                options: {
+                    presets: [{'plugins': ['@babel/plugin-proposal-class-properties']}]
+                }
             },
             {
                 test: /\.css$/,
-                use: [
+                loader: [
                   'style-loader',
                   'css-loader'
                 ]
