@@ -4,6 +4,7 @@ import { Point } from './modules/point.js';
 import { LegionSolver } from './modules/legion_solver.js';
 
 // TODO: Remove extra 2s.
+
 const defaultPieces = [
     [
         [2]
@@ -71,12 +72,16 @@ const defaultPieces = [
 
 let pieces = [];
 let amounts = [];
+ 
+let legionBoard = JSON.parse(localStorage.getItem("legionBoard"));
 
-let legionBoard = [];
-for (let i = 0; i < 20; i++) {
-    legionBoard[i] = [];
-    for (let j = 0; j < 22; j++) {
-        legionBoard[i][j] = -1;
+if (!legionBoard) {
+    legionBoard = [];
+    for (let i = 0; i < 20; i++) {
+        legionBoard[i] = [];
+        for (let j = 0; j < 22; j++) {
+            legionBoard[i][j] = -1;
+        }
     }
 }
 
@@ -111,7 +116,7 @@ for (let i = 0; i < legionBoard.length; i++) {
 for (let i = 0; i < defaultPieces.length; i++) {
     let row = '<td class="pieceCell"></td>'.repeat(defaultPieces[i][0].length);
     let grid = `<tr>${row}</tr>`.repeat(defaultPieces[i].length);
-    document.querySelector('#pieceForm form').innerHTML += `<div>
+    document.querySelector('#pieceForm form').innerHTML += `<div class="piece">
         <label for="piece${i+1}">
             <table id="pieceDisplay${i+1}">
                 <tbody>${grid}</tbody> 
@@ -201,8 +206,22 @@ for (let i = Math.ceil(legionBoard[0].length / 4); i < Math.floor(3 * legionBoar
     getLegionCell(3 * legionBoard.length / 4, i).style.borderTopWidth = '3px';   
 }
 
-let currentPieces = 0;
-let boardFilled = 0;
+let currentPieces;
+if (localStorage.getItem("currentPieces")) {
+    currentPieces = JSON.parse(localStorage.getItem("currentPieces"));
+    document.getElementById('currentPieces').innerText = `Spaces to be Filled: ${currentPieces}`;
+} else {
+    currentPieces = 0;
+}
+
+let boardFilled;
+if (localStorage.getItem("boardFilled")) {
+    console.log("hi");
+    boardFilled = JSON.parse(localStorage.getItem("boardFilled"));
+    document.getElementById('boardFilled').innerText = `Board Spaces Filled: ${boardFilled}`;
+} else {
+    boardFilled = 0;
+}
 
 function updateCurrentPieces() {
     currentPieces = 0;
@@ -226,6 +245,15 @@ function updateCurrentPieces() {
         }
     }
 
+    let pieceStorage = [];
+    for (let i = 0; i < defaultPieces.length; i++) {
+        if (document.getElementById(`piece${i+1}`).value == "") {
+            pieceStorage.push("0");  
+        }
+        pieceStorage.push(document.getElementById(`piece${i+1}`).value);
+    }
+    localStorage.setItem("pieceStorage", JSON.stringify(pieceStorage));
+    localStorage.setItem("currentPieces", JSON.stringify(currentPieces));
     document.getElementById('currentPieces').innerText = `Spaces to be Filled: ${currentPieces}`;
 }
 
@@ -236,21 +264,69 @@ const states = {
 }
 
 let state = states.START;
-let isBigClick = false;
-let isLiveSolve = false;
+let isBigClick;
+if (localStorage.getItem("isBigClick")) {
+    document.getElementById("bigClick").checked = JSON.parse(localStorage.getItem("isBigClick"));
+    if (JSON.parse(localStorage.getItem("isBigClick"))) {
+        activateBigClick();
+    }
+
+} else {
+    isBigClick = false;
+}
+
+let isLiveSolve;
+if (localStorage.getItem("isLiveSolve")) {
+    document.getElementById("liveSolve").checked = JSON.parse(localStorage.getItem("isLiveSolve"));
+    if (JSON.parse(localStorage.getItem("isLiveSolve"))) {
+        activateLiveSolve();
+    }
+} else {
+    isLiveSolve = false;
+}
 
 document.getElementById("bigClick").addEventListener("click", activateBigClick);
 document.getElementById("liveSolve").addEventListener("click", activateLiveSolve);
+document.getElementById("clearBoard").addEventListener("click", clearBoard);
+document.getElementById("clearPieces").addEventListener("click", clearPieces);
 
 function activateBigClick() {
     isBigClick = !isBigClick;
+    localStorage.setItem("isBigClick", JSON.stringify(isBigClick));
 }
 
 function activateLiveSolve() {
     isLiveSolve = !isLiveSolve;
+    localStorage.setItem("isLiveSolve", JSON.stringify(isLiveSolve));
     if (isLiveSolve) {
         colourBoard();
     }
+}
+
+function clearBoard() {
+    for (let i = 0; i < legionBoard.length; i++) {
+        for (let j = 0; j < legionBoard[0].length; j++) {
+            legionBoard[i][j] = -1;
+            getLegionCell(i, j).style.background = pieceColours.get(legionBoard[i][j])
+        }
+    }
+    boardFilled = 0;
+    localStorage.setItem("legionBoard", JSON.stringify(legionBoard));
+    localStorage.setItem("boardFilled", JSON.stringify(0));
+    document.getElementById('boardFilled').innerText = `Board Spaces Filled: ${boardFilled}`;
+}
+
+function clearPieces() {
+    let pieceStorage = []
+    for (let i = 0; i < defaultPieces.length; i++) {
+        document.getElementById(`piece${i+1}`).value = JSON.parse(0);
+        pieceStorage.push("0");
+    }
+    currentPieces = 0;
+    console.log(pieceStorage);
+    localStorage.setItem("pieceStorage", JSON.stringify(pieceStorage));
+    localStorage.setItem("currentPieces", JSON.stringify(0));
+    document.getElementById('currentPieces').innerText = `Spaces to be Filled: ${currentPieces}`;
 }
 
 function getLegionCell(i, j) {
@@ -305,7 +381,8 @@ function clickBoard(i, j) {
             boardFilled++;
         }
     }
-
+    localStorage.setItem("legionBoard", JSON.stringify(legionBoard));
+    localStorage.setItem("boardFilled", JSON.stringify(boardFilled));
     document.getElementById('boardFilled').innerText = `Board Spaces Filled: ${boardFilled}`;
 }
 
@@ -383,6 +460,7 @@ async function startReset(evt) {
     if (evt.target.innerText == "Start") {
         evt.target.innerText = "Reset";
         evt.target.disabled = true;
+        document.getElementById("clearBoard").disabled = true;
         let success = await runSolver();
         evt.target.disabled = false;
         if (!success) {
@@ -390,6 +468,7 @@ async function startReset(evt) {
         }
     } else {
         resetBoard();
+        document.getElementById("clearBoard").disabled = false;
         document.getElementById("failText").innerText = "";
         evt.target.innerText = "Start";
     }
@@ -441,4 +520,14 @@ async function runSolver() {
     }
     state = states.COMPLETED;
     return success;
+}
+
+window.onload = function() {
+    colourBoard();
+    let fill = JSON.parse(localStorage.getItem("pieceStorage"))
+    if (fill) {
+        for (let i = 0; i < defaultPieces.length; i++) {
+            document.getElementById(`piece${i+1}`).value = fill[i];
+        }
+    }
 }
