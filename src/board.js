@@ -1,7 +1,6 @@
 import { Point } from './modules/point.js';
-import { Piece } from './modules/piece.js';
 import { LegionSolver } from './modules/legion_solver.js';
-import { pieceColours, defaultPieces } from './pieces.js';
+import { pieceColours, pieces } from './pieces.js';
 
 let board = JSON.parse(localStorage.getItem("legionBoard"));
 if (!board) {
@@ -26,6 +25,15 @@ for (let i = 0; i < 16; i++) {
     legionGroups[i] = [];
 }
 
+const row = '<td class="legionCell"></td>'.repeat(board[0].length);
+for (let i = 0; i < board.length; i++) {
+    document.querySelector('#legionBoard tbody').innerHTML += `<tr>${row}</tr>`;
+}
+
+setLegionBorders();
+setLegionGroups();
+colourBoard();
+
 let boardFilled = 0;
 if (localStorage.getItem("boardFilled")) {
     boardFilled = JSON.parse(localStorage.getItem("boardFilled"));
@@ -47,15 +55,6 @@ if (localStorage.getItem("isLiveSolve")) {
         activateLiveSolve();
     }
 }
-
-const row = '<td class="legionCell"></td>'.repeat(board[0].length);
-for (let i = 0; i < board.length; i++) {
-    document.querySelector('#legionBoard tbody').innerHTML += `<tr>${row}</tr>`;
-}
-
-setLegionBorders();
-setLegionGroups();
-colourBoard();
 
 document.getElementById("bigClick").addEventListener("click", activateBigClick);
 document.getElementById("liveSolve").addEventListener("click", activateLiveSolve);
@@ -246,7 +245,7 @@ function hoverOffBoard(i, j) {
 }
 
 function resetBoard() {
-    const state = states.START;
+    state = states.START;
     for (let i = 0; i < board.length; i++) {
         for (let j = 0; j < board[0].length; j++) {
             if (board[i][j] > 0) {
@@ -291,6 +290,7 @@ async function startReset(evt) {
             document.getElementById("failText").innerText = "No Solution Exists";
         }
     } else {
+        resetBoard();
         document.getElementById("clearBoard").disabled = false;
         document.getElementById("failText").innerText = "";
         evt.target.innerText = "Start";
@@ -298,26 +298,12 @@ async function startReset(evt) {
 }
 
 async function runSolver() {
-    let pieces = []
-    let amounts = [];
     state = states.IN_PROGRESS;
-    for (let i = 0; i < defaultPieces.length; i++) {
-        let input = document.getElementById(`piece${i+1}`).value;
-        if (input == "") {
-            input = 0;
-        }
-        amounts.push(input);
-    }
-
-    for (let i = 0; i < defaultPieces.length; ++i){
-        pieces[i] = new Piece(defaultPieces[i], amounts[i], i + 1);
-    }
-    
     if (boardFilled == 0 && currentPieces > 0) {
         return false;
     }
 
-    let legionSolver = new LegionSolver(board, pieces, onBoardUpdated);
+    let legionSolver = new LegionSolver(board, _.cloneDeep(pieces), onBoardUpdated);
     console.time("solve");
     let success = await legionSolver.solve();
     console.timeEnd("solve");
@@ -330,7 +316,7 @@ async function runSolver() {
 }
 
 function onBoardUpdated() {
-    if (isLiveSolve()) {
+    if (isLiveSolve) {
         colourBoard();
     }
 }

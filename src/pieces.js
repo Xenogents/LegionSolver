@@ -1,3 +1,6 @@
+import { Piece } from './modules/piece.js';
+import { sumBy } from 'lodash';
+
 // TODO: Remove extra 2s.
 
 const defaultPieces = [
@@ -65,6 +68,11 @@ const defaultPieces = [
     ],
 ];
 
+const pieces = []
+for (let i = 0; i < defaultPieces.length; ++i){
+    pieces.push(Piece.createPiece(defaultPieces[i], 0));
+}
+
 const pieceColours = new Map();
 pieceColours.set(-1, 'white');
 pieceColours.set(0, 'grey');
@@ -113,46 +121,31 @@ for (let i = 0; i < defaultPieces.length; i++) {
     }
 }
 
-document.getElementById('pieceForm').addEventListener("input", updateCurrentPieces);
-
-let currentPieces;
+let currentPieces = 0;
 if (localStorage.getItem("currentPieces")) {
     currentPieces = JSON.parse(localStorage.getItem("currentPieces"));
     document.getElementById('currentPieces').innerText = `Spaces to be Filled: ${currentPieces}`;
-} else {
-    currentPieces = 0;
 }
 
-function updateCurrentPieces() {
-    currentPieces = 0;
-    for (let i = 1; i < 4; i++) {
-        if (document.getElementById(`piece${i}`).value != "") {
-            currentPieces += i * parseInt(document.getElementById(`piece${i}`).value);
-        }
-    }
-    if (document.getElementById(`piece4`).value != "") {
-        currentPieces += parseInt(3 * document.getElementById(`piece4`).value);
-    }
-
-    for (let i = 5; i < 10; i++) {
-        if (document.getElementById(`piece${i}`).value != "") {
-            currentPieces += parseInt(4 * document.getElementById(`piece${i}`).value);
-        }
-    }
-    for (let i = 10; i < 17; i++) {
-        if (document.getElementById(`piece${i}`).value != "") {
-            currentPieces += parseInt(5 * document.getElementById(`piece${i}`).value);
-        }
-    }
-
-    let pieceStorage = [];
+let pieceAmounts = JSON.parse(localStorage.getItem("pieceAmounts"))
+if (pieceAmounts) {
     for (let i = 0; i < defaultPieces.length; i++) {
-        if (document.getElementById(`piece${i+1}`).value == "") {
-            pieceStorage.push("0");  
-        }
-        pieceStorage.push(document.getElementById(`piece${i+1}`).value);
+        document.getElementById(`piece${i+1}`).value = pieceAmounts[i];
     }
-    localStorage.setItem("pieceStorage", JSON.stringify(pieceStorage));
+
+    updateCurrentPieces();
+}
+
+document.getElementById('pieceForm').addEventListener("input", updateCurrentPieces);
+
+function updateCurrentPieces() {
+    for (let piece of pieces) {
+        piece.amount = parseInt(document.getElementById(`piece${piece.id}`).value) || 0;
+    }
+
+    currentPieces = sumBy(pieces, piece => piece.cellCount * piece.amount);
+
+    localStorage.setItem("pieceAmounts", JSON.stringify(pieces.map(piece => piece.amount)));
     localStorage.setItem("currentPieces", JSON.stringify(currentPieces));
     document.getElementById('currentPieces').innerText = `Spaces to be Filled: ${currentPieces}`;
 }
@@ -160,22 +153,11 @@ function updateCurrentPieces() {
 document.getElementById("clearPieces").addEventListener("click", clearPieces);
 
 function clearPieces() {
-    let pieceStorage = []
     for (let i = 0; i < defaultPieces.length; i++) {
-        document.getElementById(`piece${i+1}`).value = JSON.parse(0);
-        pieceStorage.push("0");
+        document.getElementById(`piece${i+1}`).value = 0;
     }
-    currentPieces = 0;
-    localStorage.setItem("pieceStorage", JSON.stringify(pieceStorage));
-    localStorage.setItem("currentPieces", JSON.stringify(0));
-    document.getElementById('currentPieces').innerText = `Spaces to be Filled: ${currentPieces}`;
+
+    updateCurrentPieces();
 }
 
-let fill = JSON.parse(localStorage.getItem("pieceStorage"))
-if (fill) {
-    for (let i = 0; i < defaultPieces.length; i++) {
-        document.getElementById(`piece${i+1}`).value = fill[i];
-    }
-}
-
-export { pieceColours, defaultPieces };
+export { pieceColours, pieces };

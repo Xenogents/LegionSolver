@@ -2,10 +2,30 @@ import { Point } from './point.js';
 import _ from 'lodash';
 
 class Piece {
+    static curId = 1;
+
     constructor(shape, amount, id) {
         this.shape = shape;
         this.amount = amount;
         this.id = id;
+    }
+
+    static createPiece(shape, amount) {
+        return new Piece(shape, amount, this.curId++);
+    }
+
+    get cellCount() {
+        Object.defineProperty(this, "cellCount", { value: 0, writable: true });
+
+        for (let i = 0; i < this.shape.length; ++i) {
+            for (let j = 0; j < this.shape[i].length; ++j) {
+                if (this.shape[i][j] > 0) {
+                    this.cellCount++;
+                }
+            }
+        }
+
+        return this.cellCount;
     }
 
     get pointShape() {
@@ -20,6 +40,7 @@ class Piece {
                 }
             }
         }
+
         return this.pointShape;
     }
 
@@ -32,6 +53,7 @@ class Piece {
                 break;
             }
         }
+
         return this.offCenter;
     }
 
