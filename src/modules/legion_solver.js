@@ -18,11 +18,11 @@ class LegionSolver {
             }
         }
 
-        this.emptySpot = [];
+        this.emptySpots = [];
         for (let i = 0; i < board.length; i++) {
             for (let j = 0; j < board[0].length; j++) {
                 if (board[i][j] == 0) {
-                    this.emptySpot.push(new Point(j, i));
+                    this.emptySpots.push(new Point(j, i));
                 }
             }
         }
@@ -42,13 +42,13 @@ class LegionSolver {
         let piece;
         let position = 0;
 
-        while (position < this.emptySpot.length && this.pieces[0].amount > 0) {
-            if (this.board[this.emptySpot[position].y][this.emptySpot[position].x] != 0) {
+        while (position < this.emptySpots.length && this.pieces[0].amount > 0) {
+            if (this.board[this.emptySpots[position].y][this.emptySpots[position].x] != 0) {
                 position++;
             } else if (this.pieces[pieceNumber].amount != 0) {
                 piece = this.pieces[pieceNumber].transformations[transformationNumber];
-                if (this.isPlaceable(this.emptySpot[position], piece)) {
-                    this.placePiece(this.emptySpot[position], piece);
+                if (this.isPlaceable(this.emptySpots[position], piece)) {
+                    this.placePiece(this.emptySpots[position], piece);
                     stack.push([pieceNumber, transformationNumber, this.takeFromList(pieceNumber), position]);
                     position++;
                     pieceNumber = 0;
@@ -67,7 +67,7 @@ class LegionSolver {
                 }
                 [pieceNumber, transformationNumber, spotsMoved, position] = stack.pop();
                 this.returnToList(pieceNumber, spotsMoved);
-                this.takeBackPiece(this.emptySpot[position], this.pieces[pieceNumber].transformations[transformationNumber])
+                this.takeBackPiece(this.emptySpots[position], this.pieces[pieceNumber].transformations[transformationNumber])
                 if (transformationNumber < this.pieces[pieceNumber].transformations.length - 1) {
                     transformationNumber++;
                 } else {
