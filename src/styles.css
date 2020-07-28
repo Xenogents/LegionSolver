@@ -34,6 +34,17 @@ form {
 
 #options {
     display: flex;
+    flex-direction: column;
+    text-align: end;
+}
+
+#checkboxes {
+    margin-bottom: 10px;
+}
+
+#iterationTime {
+    display: flex;
+    flex-direction: column;
     justify-content: flex-end;
 }
 

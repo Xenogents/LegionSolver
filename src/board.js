@@ -293,6 +293,8 @@ async function startReset(evt) {
         resetBoard();
         document.getElementById("clearBoard").disabled = false;
         document.getElementById("failText").innerText = "";
+        document.getElementById("iterations").innerText = "";
+        document.getElementById("time").innerText = "";
         evt.target.innerText = "Start";
     }
 }
@@ -304,10 +306,10 @@ async function runSolver() {
     }
 
     let legionSolver = new LegionSolver(board, _.cloneDeep(pieces), onBoardUpdated);
-    console.time("solve");
+    let time = new Date().getTime();
     let success = await legionSolver.solve();
-    console.timeEnd("solve");
-    console.log("iterations: " + legionSolver.iterations);
+    document.getElementById("iterations").innerText = `Iterations: ${legionSolver.iterations}`;
+    document.getElementById("time").innerText = `Time: ${new Date().getTime() - time}ms`;
     if (success) {
         colourBoard();
     }
