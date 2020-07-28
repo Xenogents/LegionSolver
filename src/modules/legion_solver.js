@@ -1,7 +1,6 @@
 import { Point } from './point.js';
 import { Piece } from './piece.js';
 
-
 class LegionSolver {
     constructor(board, pieces, onBoardUpdated) {
         this.board = board;
@@ -9,6 +8,8 @@ class LegionSolver {
         this.onBoardUpdated = onBoardUpdated;
         this.iterations = 0;
         this.pieceLength = pieces.length;
+        this.valid = true;
+
 
         this.middle = [];
         for (let i = 9; i < 11; i++) {
@@ -43,13 +44,15 @@ class LegionSolver {
         let piece;
         let position = 0;
 
-        while (position < this.emptySpots.length && this.pieces[0].amount > 0) {
-            if (this.board[this.emptySpots[position].y][this.emptySpots[position].x] != 0) {
+        while (!(position == this.emptySpots.length) || !(this.pieces[0].amount == 0) || !this.valid) {
+            let point = this.emptySpots[position];
+            if (this.valid && this.board[point.y][point.x] != 0) {
                 position++;
-            } else if (this.pieces[pieceNumber].amount != 0) {
+            } else if (this.valid && this.pieces[pieceNumber].amount) {
                 piece = this.pieces[pieceNumber].transformations[transformationNumber];
-                if (this.isPlaceable(this.emptySpots[position], piece)) {
-                    this.placePiece(this.emptySpots[position], piece);
+                if (this.isPlaceable(point, piece)) {
+                    this.placePiece(point, piece);
+                    this.isValid();
                     stack.push([pieceNumber, transformationNumber, this.takeFromList(pieceNumber), position]);
                     position++;
                     pieceNumber = 0;
@@ -66,6 +69,10 @@ class LegionSolver {
                 if (stack.length == 0) {
                     return false;
                 }
+                if (!this.valid) {
+                    this.valid = true;
+                }
+
                 [pieceNumber, transformationNumber, spotsMoved, position] = stack.pop();
                 this.returnToList(pieceNumber, spotsMoved);
                 this.takeBackPiece(this.emptySpots[position], this.pieces[pieceNumber].transformations[transformationNumber])
@@ -79,33 +86,23 @@ class LegionSolver {
 
             this.iterations++;
             if (this.iterations % batchSize == 0) {
-                console.log(this.iterations);
                 this.onBoardUpdated();
                 await new Promise(resolve => setTimeout(resolve, 0));
             }
         }
+
         return true;
     }
 
     takeFromList(placement) {
         this.pieces[placement].amount--;
-
         let fill = this.pieces[placement];
-        if (fill.amount >= this.pieces[placement + 1].amount || placement == this.pieceLength - 1) {
-            return 0;
-        }
-
-        for (let i = placement + 1; i < this.pieceLength; i++) {
-            if (this.pieces[placement].amount >= this.pieces[i].amount) {
-                this.pieces[placement] = this.pieces[i - 1];
-                this.pieces[i - 1] = fill;
-                return i - 1 - placement;
-            }
-        }
-    
-        this.pieces[placement] = this.pieces[this.pieceLength - 1];
-        this.pieces[this.pieceLength - 1] = fill;
-        return this.pieceLength - 1 - placement;
+        let index = placement + 1;
+        while (fill.amount < this.pieces[index].amount)
+            index++;
+        this.pieces[placement] = this.pieces[index - 1];
+        this.pieces[index - 1] = fill;
+        return index - 1 - placement;
     }
 
     returnToList(placement, spotsMoved) {
@@ -125,7 +122,8 @@ class LegionSolver {
                 normalPieces++;
             }
         }
-        return normalPieces != this.middle.length;
+
+        this.valid = normalPieces != this.middle.length;
     }
     
     isPlaceable(position, piece) {
@@ -138,9 +136,10 @@ class LegionSolver {
                 || x >= this.board[0].length
                 || x < 0
                 || this.board[y][x] != 0) {
-            return false;
+                return false;
             }
         }
+
         return true;
     }
 
