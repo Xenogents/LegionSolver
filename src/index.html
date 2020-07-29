@@ -1,8 +1,9 @@
 <html>
 <head>
-  <script src="./dist/index.js" async></script>
+  <% for(var i=0; i < htmlWebpackPlugin.files.js.length; i++) {%>
+    <script src="<%= htmlWebpackPlugin.files.js[i] %>" async></script>
+  <% } %>
 </head>
-
 <body>
   <h1 id="title">Legion Solver</h1>
   <div id="legionWrapper" class="centerMiddleChild">
