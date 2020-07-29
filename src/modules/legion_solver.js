@@ -54,6 +54,9 @@ class LegionSolver {
                     this.placePiece(point, piece);
                     this.isValid();
                     stack.push([pieceNumber, transformationNumber, this.takeFromList(pieceNumber), position]);
+                    if (!this.pieces[0].amount) {
+                        return true;
+                    }
                     position++;
                     pieceNumber = 0;
                     transformationNumber = 0;
