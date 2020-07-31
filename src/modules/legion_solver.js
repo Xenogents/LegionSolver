@@ -2,6 +2,9 @@ import { Point } from './point.js';
 import { Piece } from './piece.js';
 
 class LegionSolver {
+    pausePromise;
+    pauseResolve;
+
     constructor(board, pieces, onBoardUpdated) {
         this.board = board;
         this.pieces = pieces;
@@ -9,7 +12,6 @@ class LegionSolver {
         this.iterations = 0;
         this.pieceLength = pieces.length;
         this.valid = true;
-
 
         this.middle = [];
         for (let i = 9; i < 11; i++) {
@@ -44,7 +46,7 @@ class LegionSolver {
         let piece;
         let position = 0;
 
-        while (!(position == this.emptySpots.length) || !(this.pieces[0].amount == 0) || !this.valid) {
+        while ((position < this.emptySpots.length && this.pieces[0].amount > 0) || !this.valid) {
             let point = this.emptySpots[position];
             if (this.valid && this.board[point.y][point.x] != 0) {
                 position++;
@@ -91,6 +93,7 @@ class LegionSolver {
             if (this.iterations % batchSize == 0) {
                 this.onBoardUpdated();
                 await new Promise(resolve => setTimeout(resolve, 0));
+                await this.pausePromise;
             }
         }
 
@@ -161,6 +164,15 @@ class LegionSolver {
         for (let point of piece.pointShape) {
             this.board[point.y + position.y][point.x + position.x - piece.offCenter] = 0;
         }
+    }
+
+    pause() {
+        this.pausePromise = new Promise(resolve => this.pauseResolve = resolve);
+    }
+
+    continue() {
+        this.pauseResolve();
+        this.pausePromise = null;
     }
 }
 
