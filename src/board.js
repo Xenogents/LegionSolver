@@ -316,10 +316,9 @@ async function runSolver() {
     }
 
     legionSolver = new LegionSolver(board, _.cloneDeep(pieces), onBoardUpdated);
-    let time = new Date().getTime();
     let success = await legionSolver.solve();
     document.getElementById("iterations").innerText = `Iterations: ${legionSolver.iterations}`;
-    document.getElementById("time").innerText = `Time: ${new Date().getTime() - time}ms`;
+    document.getElementById("time").innerText = `Time: ${new Date().getTime() - legionSolver.time}ms`;
     if (success) {
         colourBoard();
     }

@@ -12,6 +12,7 @@ class LegionSolver {
         this.iterations = 0;
         this.pieceLength = pieces.length;
         this.valid = true;
+        this.time = new Date().getTime();
 
         this.middle = [];
         for (let i = 9; i < 11; i++) {
@@ -167,10 +168,16 @@ class LegionSolver {
     }
 
     pause() {
+        this.time -= new Date().getTime();
+        document.getElementById("iterations").innerText = `Iterations: ${this.iterations}`;
+        document.getElementById("time").innerText = `Time: ${-this.time}ms`;
         this.pausePromise = new Promise(resolve => this.pauseResolve = resolve);
     }
 
     continue() {
+        this.time += new Date().getTime();
+        document.getElementById("iterations").innerText = "";
+        document.getElementById("time").innerText = "";
         this.pauseResolve();
         this.pausePromise = null;
     }
