@@ -36,7 +36,7 @@ class Piece {
                 if (this.shape[i][j] == 1) {
                     this.pointShape.push(new PiecePoint(j, i, false));
                 } else if (this.shape[i][j] == 2) {
-                    this.pointShape.push(new PiecePoint(j, i, true));    
+                    this.pointShape.push(new PiecePoint(j, i, true));
                 }
             }
         }
@@ -98,6 +98,25 @@ class Piece {
         }
 
         return this.pointTransformations;
+    }
+
+    get restrictedTransformations() {
+        Object.defineProperty(this, "restrictedTransformations", { value: []});
+        for (let piece of this.transformations) {
+            if (!piece.shape[0][1 + piece.offCenter] || piece.shape[0][1 + piece.offCenter] == 0) {
+                this.restrictedTransformations.push(piece);
+            }
+        }
+        return this.restrictedTransformations;
+    }
+
+    get restrictedPointTransformations() {
+        Object.defineProperty(this, "restrictedPointTransformations", { value: []});
+        for (let piece of this.restrictedTransformations) {
+            this.restrictedPointTransformations.push(piece.pointShape);
+
+        }
+        return this.restrictedPointTransformations;
     }
 }
 

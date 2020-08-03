@@ -316,6 +316,7 @@ async function runSolver() {
     }
 
     legionSolver = new LegionSolver(board, _.cloneDeep(pieces), onBoardUpdated);
+
     let success = await legionSolver.solve();
     document.getElementById("iterations").innerText = `Iterations: ${legionSolver.iterations}`;
     document.getElementById("time").innerText = `Time: ${new Date().getTime() - legionSolver.time}ms`;
