@@ -56,8 +56,7 @@ class LegionSolver {
                 }
             }
         }
-        this.firstAlgorithm = true;
-        console.log(this.longSpaces);
+        this.firstAlgorithm = !!this.longSpaces.length;
     }
 
     async solve() {
@@ -67,11 +66,12 @@ class LegionSolver {
         return await this.solveInternal();
     }
 
-    async solveInternal(batchSize=300000) {
+    async solveInternal(batchSize=100000) {
         let stack = [];
         let spotsMoved;
         let piece;
         let point;
+        let position = 0;
 
         while (this.pieces[0].amount > 0 || !this.valid) {
             if (this.valid && this.restrictedSpots.length != 0 && this.pieces[this.restrictedPieceNumber].amount && this.directionFree != 5 && !this.firstAlgorithm) {
@@ -81,7 +81,7 @@ class LegionSolver {
                     this.determineDirectionFree(point);
                     if (this.isPlaceable(point, piece)) {
                         stack.push([0, 0, this.takeFromList(this.restrictedPieceNumber), [...this.restrictedSpots], 
-                        point, this.restrictedPieceNumber, this.restrictedTransformationNumber, this.directionFree, []]);
+                        point, this.restrictedPieceNumber, this.restrictedTransformationNumber, this.directionFree, [], 0]);
                         this.restrictedSpots.splice(0, 1);
                         this.placePiece(point, piece);
                         this.isValid();
@@ -91,19 +91,37 @@ class LegionSolver {
                         this.changeIndex(true);
                     }
                 }
-            } else if (this.firstAlgorithm || this.valid && this.pieces[this.pieceNumber].amount && this.restrictedSpots.length == 0 && this.directionFree != 5){
-                console.log(this.pieceNumber.amount);
+            } else if (this.valid && this.pieces[this.pieceNumber].amount && (this.firstAlgorithm || this.restrictedSpots.length == 0) && this.directionFree != 5){
                 this.directionFree = 0;
-                let position = 0;
-                while (this.board[this.emptySpots[position].y][this.emptySpots[position].x] != 0) {
-                    position++;
+                if (!this.firstAlgorithm) {
+                    position = 0;
+                    while (position < this.emptySpots.length && this.board[this.emptySpots[position].y][this.emptySpots[position].x] != 0) {
+                        position++;
+                    }
+                } else {
+
+                }
+                if (position == this.emptySpots.length) {
+                    return true;
                 }
                 point = this.emptySpots[position];
                 piece = this.pieces[this.pieceNumber].transformations[this.transformationNumber];
                 if (this.isPlaceable(point, piece)) {
+                    let filler = [];
+                    for (let i = 0; i < this.longSpaces.length; i++) {
+                        filler.push(this.longSpaces[i]);
+                    }
+                    stack.push([this.pieceNumber, this.transformationNumber, this.takeFromList(this.pieceNumber), [...this.restrictedSpots], point, 0, 0, 0, filler, position]);
                     this.placePiece(point, piece);
                     this.isValid();
-                    stack.push([this.pieceNumber, this.transformationNumber, this.takeFromList(this.pieceNumber), [], point, 0, 0, 0, 0, [...this.longSpaces]]);
+
+                    if (this.firstAlgorithm) {
+                        while (this.board[this.emptySpots[position].y][this.emptySpots[position].x] != 0) {
+                            position++;
+                        }
+
+                    }
+
                     this.pieceNumber = 0;
                     this.transformationNumber = 0;
                 } else {
@@ -118,7 +136,7 @@ class LegionSolver {
                 }
 
                 [this.pieceNumber, this.transformationNumber, spotsMoved, this.restrictedSpots,
-                    point, this.restrictedPieceNumber, this.restrictedTransformationNumber, this.directionFree, this.longSpaces] = stack.pop();
+                    point, this.restrictedPieceNumber, this.restrictedTransformationNumber, this.directionFree, this.longSpaces, position] = stack.pop();
                 if (this.directionFree == 0) {
                     this.returnToList(this.pieceNumber, spotsMoved);
                     this.takeBackPiece(point, this.pieces[this.pieceNumber].transformations[this.transformationNumber])
@@ -126,14 +144,17 @@ class LegionSolver {
                     this.returnToList(this.restrictedPieceNumber, spotsMoved);
                     this.takeBackPiece(point, this.pieces[this.restrictedPieceNumber].restrictedTransformations[this.restrictedTransformationNumber])
                 }
-                this.firstAlgorithm == !(this.longSpaces.length == 0);
+                this.firstAlgorithm = !(this.longSpaces.length == 0);
+                if (!this.firstAlgorithm) {
+                    this.changeIndex(!this.restrictedSpots.length == 0)
+                } else {
+                    this.changeIndex(false);
+                }
 
-                this.changeIndex(!this.restrictedSpots.length == 0)
             }
 
             this.iterations++;
             if (this.iterations % batchSize == 0) {
-                console.log(this.iterations);
                 this.onBoardUpdated();
                 await new Promise(resolve => setTimeout(resolve, 0));
                 await this.pausePromise;
@@ -222,7 +243,7 @@ class LegionSolver {
                 }
             }
             if (this.longSpaces.length == 0) {
-                this.firstAlgorithm == false;
+                this.firstAlgorithm = false;
             }
         }
         for (let point of realPoints) {    
@@ -243,6 +264,7 @@ class LegionSolver {
         for (let i = spliceElements.length - 1; i >= 0; i--) {
             this.restrictedSpots.splice(spliceElements[i], 1);
         }
+        this.restrictedSpots.sort((a, b) => b.spotsFilled - a.spotsFilled)
     }
 
     takeBackPiece(position, piece) {
