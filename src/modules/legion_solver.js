@@ -5,6 +5,10 @@ import _ from 'lodash';
 class LegionSolver {
     pausePromise;
     pauseResolve;
+    iterations
+    directionFree;
+    success;
+    shouldStop;
 
     constructor(board, pieces, onBoardUpdated) {
         this.board = board;
@@ -17,12 +21,11 @@ class LegionSolver {
         this.transformationNumber = 0;
         this.restrictedPieceNumber = 0;
         this.restrictedTransformationNumber = 0;
-        this.directionFree;
         this.time = new Date().getTime();
 
         this.middle = [];
-        for (let i = 9; i < 11; i++) {
-            for (let j = 10; j < 12; j++) {
+        for (let i = this.board.length / 2 - 1; i < this.board.length / 2 + 1; i++) {
+            for (let j = this.board[0].length / 2 - 1; j < this.board[0].length / 2 + 1; j++) {
                 if (this.board[i][j] != -1) {
                     this.middle.push(new Point(j, i));
                 }
@@ -61,9 +64,10 @@ class LegionSolver {
 
     async solve() {
         this.pieces.sort((a, b) => b.amount - a.amount);
-        this.pieces.push(new Piece([[]], 0, -5));
-        this.restrictedSpots.sort((a, b) => b.spotsFilled - a.spotsFilled)
-        return await this.solveInternal();
+        this.pieces.push(new Piece([[]], 0, -1));
+        this.restrictedSpots.sort((a, b) => b.spotsFilled - a.spotsFilled);
+        this.success = await this.solveInternal();
+        return this.success;
     }
 
     async solveInternal(batchSize=100000) {
@@ -155,6 +159,9 @@ class LegionSolver {
 
             this.iterations++;
             if (this.iterations % batchSize == 0) {
+                if (this.shouldStop) {
+                    return;
+                }
                 this.onBoardUpdated();
                 await new Promise(resolve => setTimeout(resolve, 0));
                 await this.pausePromise;
@@ -376,6 +383,10 @@ class LegionSolver {
         document.getElementById("time").innerText = "";
         this.pauseResolve();
         this.pausePromise = null;
+    }
+
+    stop() {
+        this.shouldStop = true;
     }
 }
 

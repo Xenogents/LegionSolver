@@ -12,7 +12,7 @@ if (!board) {
         }
     }
 }
-let legionSolver;
+let legionSolvers = [];
 
 const states = {
     START: 'start',
@@ -247,14 +247,24 @@ function hoverOffBoard(i, j) {
 }
 
 function resetBoard() {
-    for (let i = 0; i < board.length; i++) {
-        for (let j = 0; j < board[0].length; j++) {
-            if (board[i][j] > 0) {
-                getLegionCell(i, j).style.background = 'grey';
-                board[i][j] = 0;
+    for (let k = 0; k < legionSolvers.length; k++) {
+        for (let i = 0; i < legionSolvers[k].board.length; i++) {
+            for (let j = 0; j < legionSolvers[k].board[0].length; j++) {
+                if (k == 0) {
+                    if (legionSolvers[k].board[i][j] >= 0) {
+                        getLegionCell(i, j).style.background = 'grey';
+                        legionSolvers[k].board[i][j] = 0;
+                    }
+                } else {
+                    if (legionSolvers[k].board[i][j] >= 0) {
+                        legionSolvers[k].board[i][j] = 0;
+                    }
+                }
             }
         }
     }
+
+    legionSolvers = [];
 }
 
 function colourBoard() {
@@ -287,17 +297,21 @@ async function handleButton(evt) {
         state = states.RUNNING;
         let success = await runSolver();
         if (!success) {
-            document.getElementById("failText").innerText = "No Solution Exists";
+            document.getElementById("failText").innerText = "No Solution Found";
         }
         evt.target.innerText = "Reset";
         state = states.COMPLETED;
     } else if (state == states.RUNNING) {
         evt.target.innerText = "Continue";
-        legionSolver.pause();
+        for (let solvers of legionSolvers) {
+            solvers.pause();
+        }
         state = states.PAUSED;
     } else if (state == states.PAUSED) {
         evt.target.innerText = "Pause";
-        legionSolver.continue();
+        for (let solvers of legionSolvers) {
+            solvers.continue();
+        }
         state = states.RUNNING
     } else if (state == states.COMPLETED) {
         resetBoard();
@@ -314,12 +328,72 @@ async function runSolver() {
     if (boardFilled == 0 && currentPieces > 0) {
         return false;
     }
+    let downBoard = [];
+    for (let i = 0; i < board.length; i++) {
+        downBoard[i] = [];
+        for (let j = 0; j < board[0].length; j++) {
+            downBoard[i][j] = board[board.length - 1 - i][board[0].length - 1 - j];
+        }
+    }
+    let rightBoard = [];
+    for (let i = 0; i < board[0].length; i++) {
+        rightBoard[i] = [];
+        for (let j = 0; j < board.length; j++) {
+            rightBoard[i][j] = board[board.length - j - 1][i];
+        }
+    }
+    let leftBoard = [];
+    for (let i = 0; i < board[0].length; i++) {
+        leftBoard[i] = [];
+        for (let j = 0; j < board.length; j++) {
+            leftBoard[i][j] = board[j][board[0].length - 1 - i];
+        }
+    }
 
-    legionSolver = new LegionSolver(board, _.cloneDeep(pieces), onBoardUpdated);
+    legionSolvers.push(new LegionSolver(board, _.cloneDeep(pieces), onBoardUpdated));
+    legionSolvers.push(new LegionSolver(rightBoard, _.cloneDeep(pieces), () => false));
+    legionSolvers.push(new LegionSolver(downBoard, _.cloneDeep(pieces), () => false));
+    legionSolvers.push(new LegionSolver(leftBoard, _.cloneDeep(pieces), () => false));
 
-    let success = await legionSolver.solve();
-    document.getElementById("iterations").innerText = `Iterations: ${legionSolver.iterations}`;
-    document.getElementById("time").innerText = `Time: ${new Date().getTime() - legionSolver.time}ms`;
+    const boardPromise = legionSolvers[0].solve();
+    const rightBoardPromise = legionSolvers[1].solve();
+    const downBoardPromise = legionSolvers[2].solve();
+    const leftBoardPromise = legionSolvers[3].solve();
+
+    const success = await Promise.race([boardPromise, rightBoardPromise, downBoardPromise, leftBoardPromise]);
+    for (let solver of legionSolvers) {
+        solver.stop();
+    }
+
+    let finishedSolver;
+
+    if (legionSolvers[0].success !== undefined) {
+        finishedSolver = legionSolvers[0];
+    } else if (legionSolvers[1].isSolveable) {
+        for (let i = 0; i < legionSolvers[1].board[0].length; i++) {
+            for (let j = 0; j < legionSolvers[1].board.length; j++) {
+                board[i][j] = legionSolvers[1].board[j][legionSolvers[1].board[0].length - 1 - i];
+            }
+        }
+        finishedSolver = legionSolvers[1];
+    } else if (legionSolvers[2].success !== undefined) {
+        for (let i = 0; i < legionSolvers[2].board.length; i++) {
+            for (let j = 0; j < legionSolvers[2].board[0].length; j++) {
+                board[i][j] = legionSolvers[2].board[legionSolvers[2].board.length - 1 - i][legionSolvers[2].board[0].length - 1 - j];
+            }
+        }
+        finishedSolver = legionSolvers[2];
+    } else if (legionSolvers[3].success !== undefined) {
+        for (let i = 0; i < legionSolvers[3].board[0].length; i++) {
+            for (let j = 0; j < legionSolvers[3].board.length; j++) {
+                board[i][j] = legionSolvers[3].board[legionSolvers[3].board.length - j - 1][i];
+            }
+        }
+        finishedSolver = legionSolvers[3];
+    }
+
+    document.getElementById("iterations").innerText = `Iterations: ${finishedSolver.iterations}`;
+    document.getElementById("time").innerText = `Time: ${new Date().getTime() - finishedSolver.time}ms`;
     if (success) {
         colourBoard();
     }
