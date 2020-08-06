@@ -285,7 +285,7 @@ function activateBigClick() {
 function activateLiveSolve() {
     isLiveSolve = !isLiveSolve;
     localStorage.setItem("isLiveSolve", JSON.stringify(isLiveSolve));
-    if (isLiveSolve) {
+    if (isLiveSolve && state != states.COMPLETED) {
         colourBoard();
     }
 }
@@ -369,7 +369,7 @@ async function runSolver() {
 
     if (legionSolvers[0].success !== undefined) {
         finishedSolver = legionSolvers[0];
-    } else if (legionSolvers[1].isSolveable) {
+    } else if (legionSolvers[1].success !== undefined) {
         for (let i = 0; i < legionSolvers[1].board[0].length; i++) {
             for (let j = 0; j < legionSolvers[1].board.length; j++) {
                 board[i][j] = legionSolvers[1].board[j][legionSolvers[1].board[0].length - 1 - i];
