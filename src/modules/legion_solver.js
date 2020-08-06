@@ -63,14 +63,14 @@ class LegionSolver {
     }
 
     async solve() {
-        this.pieces.sort((a, b) => b.amount - a.amount);
+        this.pieces.sort((a, b) => b.amount * b.cellCount - a.amount * a.cellCount);
         this.pieces.push(new Piece([[]], 0, -1));
         this.restrictedSpots.sort((a, b) => b.spotsFilled - a.spotsFilled);
         this.success = await this.solveInternal();
         return this.success;
     }
 
-    async solveInternal(batchSize=100000) {
+    async solveInternal(batchSize=30000) {
         let stack = [];
         let spotsMoved;
         let piece;
@@ -175,7 +175,7 @@ class LegionSolver {
         this.pieces[placement].amount--;
         let fill = this.pieces[placement];
         let index = placement + 1;
-        while (fill.amount < this.pieces[index].amount)
+        while (fill.amount * fill.cellCount < this.pieces[index].amount * this.pieces[index].cellCount)
             index++;
         this.pieces[placement] = this.pieces[index - 1];
         this.pieces[index - 1] = fill;
