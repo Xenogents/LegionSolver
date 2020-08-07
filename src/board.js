@@ -62,6 +62,8 @@ document.getElementById("bigClick").addEventListener("click", activateBigClick);
 document.getElementById("liveSolve").addEventListener("click", activateLiveSolve);
 document.getElementById("clearBoard").addEventListener("click", clearBoard);
 document.getElementById("boardButton").addEventListener("click", handleButton);
+document.getElementById("resetButton").addEventListener("click", resetDuringPause)
+document.getElementById("resetButton").style.visibility = 'hidden';
 
 for (let i = 0; i < board.length; i++) {
     for (let j = 0; j < board[0].length; j++) {
@@ -290,6 +292,16 @@ function activateLiveSolve() {
     }
 }
 
+function resetDuringPause() {
+    resetBoard();
+    document.getElementById("clearBoard").disabled = false;
+    document.getElementById("boardButton").innerText = "Start";
+    document.getElementById("resetButton").style.visibility = 'hidden';
+    document.getElementById("iterations").innerText = "";
+    document.getElementById("time").innerText = "";
+    state = states.START;
+}
+
 async function handleButton(evt) {
     if (state == states.START) {
         evt.target.innerText = "Pause";
@@ -307,12 +319,14 @@ async function handleButton(evt) {
             solvers.pause();
         }
         state = states.PAUSED;
+        document.getElementById("resetButton").style.visibility = 'visible';
     } else if (state == states.PAUSED) {
         evt.target.innerText = "Pause";
         for (let solvers of legionSolvers) {
             solvers.continue();
         }
         state = states.RUNNING
+        document.getElementById("resetButton").style.visibility = 'hidden';
     } else if (state == states.COMPLETED) {
         resetBoard();
         document.getElementById("clearBoard").disabled = false;
@@ -355,12 +369,18 @@ async function runSolver() {
     legionSolvers.push(new LegionSolver(downBoard, _.cloneDeep(pieces), () => false));
     legionSolvers.push(new LegionSolver(leftBoard, _.cloneDeep(pieces), () => false));
 
+    let runRotated = legionSolvers[0].longSpaces.length != 0;
     const boardPromise = legionSolvers[0].solve();
-    const rightBoardPromise = legionSolvers[1].solve();
-    const downBoardPromise = legionSolvers[2].solve();
-    const leftBoardPromise = legionSolvers[3].solve();
+    let success;
+    if (runRotated) {
+        const rightBoardPromise = legionSolvers[1].solve();
+        const downBoardPromise = legionSolvers[2].solve();
+        const leftBoardPromise = legionSolvers[3].solve();
+        success = await Promise.race([boardPromise, rightBoardPromise, downBoardPromise, leftBoardPromise]);
+    } else {
+        success = await boardPromise;
+    }
 
-    const success = await Promise.race([boardPromise, rightBoardPromise, downBoardPromise, leftBoardPromise]);
     for (let solver of legionSolvers) {
         solver.stop();
     }

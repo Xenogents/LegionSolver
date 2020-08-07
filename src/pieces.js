@@ -66,6 +66,14 @@ const defaultPieces = [
         [0, 2, 0],
         [0, 1, 1]
     ],
+    [
+        [1, 0, 0, 0],
+        [0, 1, 2, 1]
+    ],
+    [
+        [1, 0, 1],
+        [1, 2, 1]
+    ],
 ];
 
 const pieces = []
@@ -77,28 +85,31 @@ const pieceColours = new Map();
 pieceColours.set(-1, 'white');
 pieceColours.set(0, 'grey');
 for (let i = 0; i < 2; i++) {
-    pieceColours.set(1 + i * 16, 'orange');
-    pieceColours.set(2 + i * 16, 'lime');
-    pieceColours.set(3 + i * 16, 'red');
-    pieceColours.set(4 + i * 16, 'limegreen');
-    pieceColours.set(5 + i * 16, 'firebrick');
-    pieceColours.set(6 + i * 16, 'mediumseagreen');
-    pieceColours.set(7 + i * 16, 'purple');
-    pieceColours.set(8 + i * 16, 'lightskyblue');
-    pieceColours.set(9 + i * 16, 'lightgrey');
-    pieceColours.set(10 + i * 16, 'aqua');
-    pieceColours.set(11 + i * 16, 'maroon');
-    pieceColours.set(12 + i * 16, 'green');
-    pieceColours.set(13 + i * 16, 'indigo');
-    pieceColours.set(14 + i * 16, 'dodgerblue');
-    pieceColours.set(15 + i * 16, 'lightsteelblue');
-    pieceColours.set(16 + i * 16, 'mediumpurple');
+    pieceColours.set(1 + i * 18, 'orange');
+    pieceColours.set(2 + i * 18, 'lime');
+    pieceColours.set(3 + i * 18, 'red');
+    pieceColours.set(4 + i * 18, 'limegreen');
+    pieceColours.set(5 + i * 18, 'firebrick');
+    pieceColours.set(6 + i * 18, 'mediumseagreen');
+    pieceColours.set(7 + i * 18, 'purple');
+    pieceColours.set(8 + i * 18, 'dodgerblue');
+    pieceColours.set(9 + i * 18, 'lightsteelblue');
+    pieceColours.set(10 + i * 18, 'aqua');
+    pieceColours.set(11 + i * 18, 'maroon');
+    pieceColours.set(12 + i * 18, 'green');
+    pieceColours.set(13 + i * 18, 'indigo');
+    pieceColours.set(14 + i * 18, 'blue');
+    pieceColours.set(15 + i * 18, 'cadetblue');
+    pieceColours.set(16 + i * 18, 'mediumpurple');
+    pieceColours.set(17 + i * 18, 'aqua');
+    pieceColours.set(18 + i * 18, 'aqua');
 }
 
 for (let i = 0; i < defaultPieces.length; i++) {
     let row = '<td class="pieceCell"></td>'.repeat(defaultPieces[i][0].length);
     let grid = `<tr>${row}</tr>`.repeat(defaultPieces[i].length);
     document.querySelector('#pieceForm form').innerHTML += `<div class="piece">
+        <div id="pieceDescription${i+1}"></div>
         <label for="piece${i+1}">
             <table id="pieceDisplay${i+1}">
                 <tbody>${grid}</tbody> 
@@ -109,6 +120,7 @@ for (let i = 0; i < defaultPieces.length; i++) {
 
     document.getElementById(`pieceDisplay${i+1}`).style.borderCollapse = 'collapse';
     document.getElementById(`pieceDisplay${i+1}`).style.borderSpacing = '0';
+    document.getElementById(`pieceDescription${i+1}`).style.paddingRight = '15px';
 
     for (let j = 0; j < defaultPieces[i].length; j++) {
         for (let k = 0; k < defaultPieces[i][j].length; k++) {
@@ -120,6 +132,25 @@ for (let i = 0; i < defaultPieces.length; i++) {
         }
     }
 }
+document.getElementById(`pieceDescription${1}`).innerHTML = 'Lvl 60';
+document.getElementById(`pieceDescription${2}`).innerHTML = 'Lvl 100';
+document.getElementById(`pieceDescription${3}`).innerHTML = 'Lvl 140 Warrior/Pirate';
+document.getElementById(`pieceDescription${4}`).innerHTML = 'Lvl 140 Mage/Thief/Archer';
+document.getElementById(`pieceDescription${5}`).innerHTML = 'Lvl 200 Warrior';
+document.getElementById(`pieceDescription${6}`).innerHTML = 'Lvl 200 Archer';
+document.getElementById(`pieceDescription${7}`).innerHTML = 'Lvl 200 Thief/Lab';
+document.getElementById(`pieceDescription${8}`).innerHTML = 'Lvl 200 Mage';
+document.getElementById(`pieceDescription${9}`).innerHTML = 'Lvl 200 Pirate';
+document.getElementById(`pieceDescription${10}`).innerHTML = 'Lvl 250 Enhanced Lab';
+document.getElementById(`pieceDescription${11}`).innerHTML = 'Lvl 250 Warrior';
+document.getElementById(`pieceDescription${12}`).innerHTML = 'Lvl 250 Archer';
+document.getElementById(`pieceDescription${13}`).innerHTML = 'Lvl 250 Thief';
+document.getElementById(`pieceDescription${14}`).innerHTML = 'Lvl 250 Mage';
+document.getElementById(`pieceDescription${15}`).innerHTML = 'Lvl 250 Pirate';
+document.getElementById(`pieceDescription${16}`).innerHTML = 'Lvl 250 Xenon';
+document.getElementById(`pieceDescription${17}`).innerHTML = 'Lvl 200 Enhanced Lab';
+document.getElementById(`pieceDescription${18}`).innerHTML = 'Lvl 250 Lab';
+
 
 let currentPieces = 0;
 if (localStorage.getItem("currentPieces")) {
