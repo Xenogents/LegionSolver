@@ -23,6 +23,7 @@
   },
   "scripts": {
     "webpack": "npx webpack --config webpack.config.dev.cjs",
-    "deploy": "npx webpack --config webpack.config.prod.cjs && gh-pages -d dist/prod"
+    "build": "npx webpack --config webpack.config.prod.cjs",
+    "deploy": "gh-pages -d dist/prod"
   }
 }
