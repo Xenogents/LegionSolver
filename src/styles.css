@@ -45,6 +45,10 @@ form {
     margin-bottom: 10px;
 }
 
+#darkModeLabel {
+    padding-top: 10px;
+}
+
 #iterationTime {
     display: flex;
     flex-direction: column;

@@ -63,6 +63,7 @@ document.getElementById("liveSolve").addEventListener("click", activateLiveSolve
 document.getElementById("clearBoard").addEventListener("click", clearBoard);
 document.getElementById("boardButton").addEventListener("click", handleButton);
 document.getElementById("resetButton").addEventListener("click", resetDuringPause)
+document.getElementById("darkMode").addEventListener("click", activateDarkMode)
 document.getElementById("resetButton").style.visibility = 'hidden';
 
 for (let i = 0; i < board.length; i++) {
@@ -132,6 +133,15 @@ function setLegionBorders() {
     }
 }
 
+let isDarkMode = false;
+if (localStorage.getItem("isDarkMode")) {
+    document.getElementById("darkMode").checked = JSON.parse(localStorage.getItem("isDarkMode"));
+    if (JSON.parse(localStorage.getItem("isDarkMode"))) {
+        activateDarkMode();
+    }
+}
+
+
 function findGroupNumber(i, j) {
     for (let k = 0; k < legionGroups.length; k++) {
         for (let point of legionGroups[k]) {
@@ -170,7 +180,7 @@ function clickBoard(i, j) {
         if (board[i][j] == -1) {
             for (let point of legionGroups[findGroupNumber(i, j)]) {
                 let grid = getLegionCell(point.x, point.y);
-                grid.style.background = 'grey';
+                grid.style.background = pieceColours.get(0);
                 if (board[point.x][point.y] == -1) {
                     boardFilled++;
                 }
@@ -179,7 +189,7 @@ function clickBoard(i, j) {
         } else {
             for (let point of legionGroups[findGroupNumber(i, j)]) {
                 let grid = getLegionCell(point.x, point.y);
-                grid.style.background = 'white';
+                grid.style.background = pieceColours.get(-1);
                 if (board[point.x][point.y] == 0) {
                     boardFilled--;
                 }
@@ -190,11 +200,11 @@ function clickBoard(i, j) {
         let grid = getLegionCell(i, j);
         if (board[i][j] == 0) {
             board[i][j] = -1;
-            grid.style.background = 'white';
+            grid.style.background = pieceColours.get(-1);
             boardFilled--;
         } else {
             board[i][j] = 0;
-            grid.style.background = 'grey';
+            grid.style.background = pieceColours.get(0);
             boardFilled++;
         }
     }
@@ -210,17 +220,34 @@ function hoverOverBoard(i, j) {
     if (isBigClick) {
         for (let point of legionGroups[findGroupNumber(i, j)]) {
             if (board[point.x][point.y] == -1) {
-                getLegionCell(point.x, point.y).style.background = 'silver';
+                if (isDarkMode) {
+                    getLegionCell(point.x, point.y).style.background = 'dimgrey';
+                } else {
+                    getLegionCell(point.x, point.y).style.background = 'silver';
+                }
             } else {
-                getLegionCell(point.x, point.y).style.background = 'dimgrey';
+                if (isDarkMode) {
+                    getLegionCell(point.x, point.y).style.background = 'rgb(20, 20, 20)';  
+                } else {
+                    getLegionCell(point.x, point.y).style.background = 'dimgrey';
+                }
+
             }
 
         }
     } else {
         if (board[i][j] == -1) {
-            getLegionCell(i, j).style.background = 'silver';
+            if (isDarkMode) {
+                getLegionCell(i, j).style.background = 'dimgrey';    
+            } else {
+                getLegionCell(i, j).style.background = 'silver';
+            }
         } else {
-            getLegionCell(i, j).style.background = 'dimgrey';
+            if (isDarkMode) {
+                getLegionCell(i, j).style.background = 'rgb(20, 20, 20)';     
+            } else {
+                getLegionCell(i, j).style.background = 'dimgrey';
+            }
         }
 
     }
@@ -233,16 +260,16 @@ function hoverOffBoard(i, j) {
     if (isBigClick) {
         for (let point of legionGroups[findGroupNumber(i, j)]) {
             if (board[point.x][point.y] == -1) {
-                getLegionCell(point.x, point.y).style.background = 'white';
+                getLegionCell(point.x, point.y).style.background = pieceColours.get(-1);
             } else {
-                getLegionCell(point.x, point.y).style.background = 'grey';
+                getLegionCell(point.x, point.y).style.background = pieceColours.get(0);
             }
         }
     } else {
         if (board[i][j] == -1) {
-            getLegionCell(i, j).style.background = 'white';
+            getLegionCell(i, j).style.background = pieceColours.get(-1);
         } else {
-            getLegionCell(i, j).style.background = 'grey';
+            getLegionCell(i, j).style.background = pieceColours.get(0);
         }
         
     }
@@ -254,7 +281,7 @@ function resetBoard() {
             for (let j = 0; j < legionSolvers[k].board[0].length; j++) {
                 if (k == 0) {
                     if (legionSolvers[k].board[i][j] >= 0) {
-                        getLegionCell(i, j).style.background = 'grey';
+                        getLegionCell(i, j).style.background = pieceColours.get(0);
                         legionSolvers[k].board[i][j] = 0;
                     }
                 } else {
@@ -277,6 +304,49 @@ function colourBoard() {
             getLegionCell(i, j).style.background = pieceColours.get(spot);
         }
     }
+}
+
+function activateDarkMode() {
+    isDarkMode = !isDarkMode;
+    localStorage.setItem("isDarkMode", JSON.stringify(isDarkMode));
+    let cell;
+    let switchTo;
+    if (isDarkMode) {
+        switchTo = 'white';
+        document.getElementById("body").style.backgroundColor = 'rgb(54, 57, 63)';
+        for (let i = 0 ; i < pieces.length; i++) {
+            document.getElementById(`piece${i+1}`).style.backgroundColor = 'silver';
+        }
+        pieceColours.set(-1, 'grey');
+        pieceColours.set(0, 'rgb(50, 50, 50)');
+    } else {
+        switchTo = 'black';
+        document.getElementById("body").style.backgroundColor = 'white';
+        for (let i = 0 ; i < pieces.length; i++) {
+            document.getElementById(`piece${i+1}`).style.backgroundColor = 'white';
+        }
+        pieceColours.set(-1, 'white');
+        pieceColours.set(0, 'grey');
+    }
+    colourBoard();
+    for (let i = 0; i < board.length; i++) {
+        for (let j = 0; j < board[0].length; j++) {
+            cell = getLegionCell(i, j);
+            if (cell.style.borderTopColor != switchTo) {
+                cell.style.borderTopColor = switchTo
+            }
+            if (cell.style.borderBottomColor != switchTo) {
+                cell.style.borderBottomColor = switchTo
+            }
+            if (cell.style.borderRightColor != switchTo) {
+                cell.style.borderRightColor = switchTo
+            }
+            if (cell.style.borderLeftColor != switchTo) {
+                cell.style.borderLeftColor = switchTo
+            }
+        }
+    }
+    document.getElementById("body").style.color = switchTo;
 }
 
 function activateBigClick() {
