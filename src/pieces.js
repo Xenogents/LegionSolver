@@ -81,28 +81,28 @@ for (let i = 0; i < defaultPieces.length; ++i){
     pieces.push(Piece.createPiece(defaultPieces[i], 0));
 }
 
-const pieceColours = new Map();
+let pieceColours = new Map();
 pieceColours.set(-1, 'white');
 pieceColours.set(0, 'grey');
 for (let i = 0; i < 2; i++) {
-    pieceColours.set(1 + i * 18, 'orange');
-    pieceColours.set(2 + i * 18, 'lime');
-    pieceColours.set(3 + i * 18, 'red');
-    pieceColours.set(4 + i * 18, 'limegreen');
+    pieceColours.set(1 + i * 18, 'lightpink');
+    pieceColours.set(2 + i * 18, 'lightcoral');
+    pieceColours.set(3 + i * 18, 'indianred');
+    pieceColours.set(4 + i * 18, 'darkseagreen');
     pieceColours.set(5 + i * 18, 'firebrick');
     pieceColours.set(6 + i * 18, 'mediumseagreen');
     pieceColours.set(7 + i * 18, 'purple');
     pieceColours.set(8 + i * 18, 'dodgerblue');
     pieceColours.set(9 + i * 18, 'lightsteelblue');
-    pieceColours.set(10 + i * 18, 'aqua');
+    pieceColours.set(10 + i * 18, 'aquamarine');
     pieceColours.set(11 + i * 18, 'maroon');
     pieceColours.set(12 + i * 18, 'green');
     pieceColours.set(13 + i * 18, 'indigo');
     pieceColours.set(14 + i * 18, 'blue');
     pieceColours.set(15 + i * 18, 'cadetblue');
     pieceColours.set(16 + i * 18, 'mediumpurple');
-    pieceColours.set(17 + i * 18, 'aqua');
-    pieceColours.set(18 + i * 18, 'aqua');
+    pieceColours.set(17 + i * 18, 'aquamarine');
+    pieceColours.set(18 + i * 18, 'aquamarine');
 }
 
 for (let i = 0; i < defaultPieces.length; i++) {
