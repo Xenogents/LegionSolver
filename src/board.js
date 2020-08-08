@@ -412,6 +412,13 @@ async function runSolver() {
     if (boardFilled == 0 && currentPieces > 0) {
         return false;
     }
+    let upBoard = [];
+    for (let i = 0; i < board.length; i++) {
+        upBoard[i] = [];
+        for (let j = 0; j < board[0].length; j++) {
+            upBoard[i][j] = board[i][j];
+        }
+    }
     let downBoard = [];
     for (let i = 0; i < board.length; i++) {
         downBoard[i] = [];
@@ -458,8 +465,8 @@ async function runSolver() {
     let finishedSolver;
 
     if (legionSolvers[0].success !== undefined) {
-        for (let i = 0; i < legionSolvers[1].board[0].length; i++) {
-            for (let j = 0; j < legionSolvers[1].board.length; j++) {
+        for (let i = 0; i < legionSolvers[0].board[0].length; i++) {
+            for (let j = 0; j < legionSolvers[0].board.length; j++) {
                 board[i][j] = legionSolvers[0].board[i][j];
             }
         }
