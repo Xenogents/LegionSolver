@@ -78,6 +78,9 @@ class LegionSolver {
         let position = 0;
 
         while (this.pieces[0].amount > 0 || !this.valid) {
+            if (this.shouldStop) {
+                return;
+            }
             if (this.valid && this.restrictedSpots.length != 0 && this.pieces[this.restrictedPieceNumber].amount && this.directionFree != 5 && !this.firstAlgorithm) {
                 if (this.restrictedPieceNumber != this.pieceLength) {
                     point = this.restrictedSpots[0];
@@ -160,9 +163,6 @@ class LegionSolver {
 
             this.iterations++;
             if (this.iterations % batchSize == 0) {
-                if (this.shouldStop) {
-                    return;
-                }
                 this.onBoardUpdated();
                 await new Promise(resolve => setTimeout(resolve, 0));
                 await this.pausePromise;

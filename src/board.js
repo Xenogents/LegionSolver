@@ -458,6 +458,11 @@ async function runSolver() {
     let finishedSolver;
 
     if (legionSolvers[0].success !== undefined) {
+        for (let i = 0; i < legionSolvers[1].board[0].length; i++) {
+            for (let j = 0; j < legionSolvers[1].board.length; j++) {
+                board[i][j] = legionSolvers[0].board[i][j];
+            }
+        }
         finishedSolver = legionSolvers[0];
     } else if (legionSolvers[1].success !== undefined) {
         for (let i = 0; i < legionSolvers[1].board[0].length; i++) {
