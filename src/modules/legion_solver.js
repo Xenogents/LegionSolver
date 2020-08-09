@@ -124,10 +124,12 @@ class LegionSolver {
                     this.isValid();
 
                     if (this.firstAlgorithm) {
-                        while (this.board[this.emptySpots[position].y][this.emptySpots[position].x] != 0) {
+                        while (position < this.emptySpots.length && this.board[this.emptySpots[position].y][this.emptySpots[position].x] != 0) {
                             position++;
                         }
-
+                        if (position == this.emptySpots.length) {
+                            return true;
+                        }
                     }
 
                     this.pieceNumber = 0;
