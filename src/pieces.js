@@ -4,72 +4,107 @@ import { sumBy } from 'lodash';
 // TODO: Remove extra 2s.
 
 const defaultPieces = [
+    // Lvl 60
     [
         [2]
     ],
+
+    // Lvl 100
     [
         [2, 2]
     ],
+
+    // Lvl 140 Warrior/Pirate
     [
         [1, 0],
         [2, 1]
     ],
+
+    // Lvl 140 Mage/Thief/Archer
     [
         [1, 2, 1]
     ],
+
+    // Lvl 200 Warrior
     [
         [2, 2],
         [2, 2]
     ],
+
+    // Lvl 200 Archer
     [
         [1, 2, 2, 1]
     ],
+
+    // Lvl 200 Thief/Lab
     [
         [1, 0, 0],
         [1, 2, 1]
     ],
+
+    // Lvl 200 Mage
     [
         [0, 1, 0],
         [1, 2, 1]
     ],
+
+    // Lvl 200 Pirate
     [
         [1, 2, 0],
         [0, 2, 1]
     ],
+
+    // Lvl 250 Enhanced Lab'
     [
         [1, 0, 0, 0, 1],
         [0, 1, 2, 1, 0]
     ],
+
+    // Lvl 250 Warrior
     [
         [1, 1, 2],
         [0, 1, 1]
     ],
+
+    // Lvl 250 Archer
     [
         [1, 1, 2, 1, 1],
     ],
+
+    // Lvl 250 Thief
     [
         [0, 0, 1],
         [1, 2, 1],
         [0, 0, 1]
     ],
+
+    // Lvl 250 Mage
     [
         [0, 1, 0],
         [1, 2, 1],
         [0, 1, 0]
     ],
+
+    // Lvl 250 Pirate
     [
         [1, 2, 0, 0],
         [0, 1, 1, 1]
     ],
+
+    // Lvl 250 Xenon
     [
         [1, 1, 0],
         [0, 2, 0],
         [0, 1, 1]
     ],
+
+    // Lvl 200 Enhanced Lab
     [
         [1, 0, 0, 0],
         [0, 1, 2, 1]
     ],
+
+    // Lvl 250 Lab
     [
         [1, 0, 1],
         [1, 2, 1]
@@ -132,30 +167,11 @@ for (let i = 0; i < defaultPieces.length; i++) {
         }
     }
 }
-document.getElementById(`pieceDescription${1}`).innerHTML = 'Lvl 60';
-document.getElementById(`pieceDescription${2}`).innerHTML = 'Lvl 100';
-document.getElementById(`pieceDescription${3}`).innerHTML = 'Lvl 140 Warrior/Pirate';
-document.getElementById(`pieceDescription${4}`).innerHTML = 'Lvl 140 Mage/Thief/Archer';
-document.getElementById(`pieceDescription${5}`).innerHTML = 'Lvl 200 Warrior';
-document.getElementById(`pieceDescription${6}`).innerHTML = 'Lvl 200 Archer';
-document.getElementById(`pieceDescription${7}`).innerHTML = 'Lvl 200 Thief/Lab';
-document.getElementById(`pieceDescription${8}`).innerHTML = 'Lvl 200 Mage';
-document.getElementById(`pieceDescription${9}`).innerHTML = 'Lvl 200 Pirate';
-document.getElementById(`pieceDescription${10}`).innerHTML = 'Lvl 250 Enhanced Lab';
-document.getElementById(`pieceDescription${11}`).innerHTML = 'Lvl 250 Warrior';
-document.getElementById(`pieceDescription${12}`).innerHTML = 'Lvl 250 Archer';
-document.getElementById(`pieceDescription${13}`).innerHTML = 'Lvl 250 Thief';
-document.getElementById(`pieceDescription${14}`).innerHTML = 'Lvl 250 Mage';
-document.getElementById(`pieceDescription${15}`).innerHTML = 'Lvl 250 Pirate';
-document.getElementById(`pieceDescription${16}`).innerHTML = 'Lvl 250 Xenon';
-document.getElementById(`pieceDescription${17}`).innerHTML = 'Lvl 200 Enhanced Lab';
-document.getElementById(`pieceDescription${18}`).innerHTML = 'Lvl 250 Lab';
-
 
 let currentPieces = 0;
 if (localStorage.getItem("currentPieces")) {
     currentPieces = JSON.parse(localStorage.getItem("currentPieces"));
-    document.getElementById('currentPieces').innerText = `Spaces to be Filled: ${currentPieces}`;
+    document.getElementById('currentPiecesValue').innerText = `${currentPieces}`;
 }
 
 let pieceAmounts = JSON.parse(localStorage.getItem("pieceAmounts"))
@@ -178,7 +194,8 @@ function updateCurrentPieces() {
 
     localStorage.setItem("pieceAmounts", JSON.stringify(pieces.map(piece => piece.amount)));
     localStorage.setItem("currentPieces", JSON.stringify(currentPieces));
-    document.getElementById('currentPieces').innerText = `Spaces to be Filled: ${currentPieces}`;
+
+    document.getElementById('currentPiecesValue').innerText = `${currentPieces}`;
 }
 
 document.getElementById("clearPieces").addEventListener("click", clearPieces);
