@@ -3,9 +3,18 @@
   <% for(var i=0; i < htmlWebpackPlugin.files.js.length; i++) {%>
     <script src="<%= htmlWebpackPlugin.files.js[i] %>" async></script>
   <% } %>
+  <meta charset="utf-8">
 </head>
 <body id = "body">
-  <h1 id="title">Legion Solver</h1>
+  <h1 id="title">
+    Legion Solver
+    <div id="languageSelectWrapper">
+      <select id="languageSelectBox">
+        <option id="GMS" value="GMS">GMS</option>
+        <option id="KMS" value="KMS">KMS</option>
+      </select>
+    </div>
+  </h1>
   <div id="subtitle">Made by: Xenogent of Bera</div>
   <div id="legionWrapper" class="centerMiddleChild">
     <div id="pieceForm">
@@ -18,8 +27,12 @@
       </table>
       <div id="legionFooter" class="centerMiddleChild">
         <div id="labels">
-          <div id="currentPieces">Spaces to be Filled: 0</div>
-          <div id="boardFilled">Board Spaces Filled: 0</div>
+          <div id="currentPieces">
+            Spaces to be Filled: <span id="currentPiecesValue">0</span>
+          </div>
+          <div id="boardFilled">
+            Board Spaces Filled: <span id="boardFilledValue">0</span>
+          </div>
           <button id="clearBoard">Clear Board</button>
         </div>
         <div id = "middlelabels">
@@ -37,8 +50,12 @@
             <label for="darkMode">Dark Mode</label></div>
           </div>
           <div id="iterationTime">
-            <div id = "iterations"></div>
-            <div id = "time"></div>
+            <div id = "iterations">
+              Iterations: <span id="iterationsValue"></span>
+            </div>
+            <div id = "time">
+              Time: <span id="timeValue"></span>
+            </div>
           </div>
         </div>
       </div>
