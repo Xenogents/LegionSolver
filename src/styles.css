@@ -7,9 +7,25 @@ form {
     margin-bottom: 0;
 }
 
-#title {
-    text-align: center;
+#languageSelectBox {
+  height: 20px;
+  float: right;
 }
+
+#title {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#languageSelectWrapper {
+  position: absolute;
+  display: flex;
+  justify-content: flex-end;
+  width: 100%;
+  padding-right: 20px;
+}
+
 #subtitle {
     text-align: center;
 }
@@ -55,6 +71,10 @@ form {
     justify-content: flex-end;
 }
 
+#iterations, #time {
+  display: none;
+}
+
 #boardFilled {
     margin-bottom: 7px;
 }
@@ -92,6 +112,7 @@ form {
 
 #failText {
     text-align: right;
+    display: none;
 }
 
 #bigClick, #liveSolve {

@@ -39,7 +39,7 @@ colourBoard();
 let boardFilled = 0;
 if (localStorage.getItem("boardFilled")) {
     boardFilled = JSON.parse(localStorage.getItem("boardFilled"));
-    document.getElementById('boardFilled').innerText = `Board Spaces Filled: ${boardFilled}`;
+    document.getElementById('boardFilledValue').innerText = `${boardFilled}`;
 }
 
 let isBigClick = false;
@@ -168,7 +168,7 @@ function clearBoard() {
     boardFilled = 0;
     localStorage.setItem("legionBoard", JSON.stringify(board));
     localStorage.setItem("boardFilled", JSON.stringify(0));
-    document.getElementById('boardFilled').innerText = `Board Spaces Filled: ${boardFilled}`;
+    document.getElementById('boardFilledValue').innerText = `${boardFilled}`;
 }
 
 function clickBoard(i, j) {
@@ -210,7 +210,7 @@ function clickBoard(i, j) {
     }
     localStorage.setItem("legionBoard", JSON.stringify(board));
     localStorage.setItem("boardFilled", JSON.stringify(boardFilled));
-    document.getElementById('boardFilled').innerText = `Board Spaces Filled: ${boardFilled}`;
+    document.getElementById('boardFilledValue').innerText = `${boardFilled}`;
 }
 
 function hoverOverBoard(i, j) {
@@ -367,8 +367,8 @@ function resetDuringPause() {
     document.getElementById("clearBoard").disabled = false;
     document.getElementById("boardButton").innerText = "Start";
     document.getElementById("resetButton").style.visibility = 'hidden';
-    document.getElementById("iterations").innerText = "";
-    document.getElementById("time").innerText = "";
+    document.getElementById("iterations").style.display = 'none';
+    document.getElementById("time").style.display = 'none';
     state = states.START;
 }
 
@@ -379,7 +379,7 @@ async function handleButton(evt) {
         state = states.RUNNING;
         let success = await runSolver();
         if (!success) {
-            document.getElementById("failText").innerText = "No Solution Found";
+          document.getElementById("failText").style.display = 'block';
         }
         evt.target.innerText = "Reset";
         state = states.COMPLETED;
@@ -400,9 +400,9 @@ async function handleButton(evt) {
     } else if (state == states.COMPLETED) {
         resetBoard();
         document.getElementById("clearBoard").disabled = false;
-        document.getElementById("failText").innerText = "";
-        document.getElementById("iterations").innerText = "";
-        document.getElementById("time").innerText = "";
+        document.getElementById("failText").style.display = 'none';
+        document.getElementById("iterations").style.display = 'none';
+        document.getElementById("time").style.display = 'none';
         evt.target.innerText = "Start";
         state = states.START;
     }
@@ -487,8 +487,11 @@ async function runSolver() {
         finishedSolver = legionSolvers[3];
     }
 
-    document.getElementById("iterations").innerText = `Iterations: ${finishedSolver.iterations}`;
-    document.getElementById("time").innerText = `Time: ${new Date().getTime() - finishedSolver.time}ms`;
+    document.getElementById("iterations").style.display = 'block';
+    document.getElementById("iterationsValue").innerText = `${finishedSolver.iterations}`;
+
+    document.getElementById("time").style.display = 'block';
+    document.getElementById("timeValue").innerText = `${new Date().getTime() - finishedSolver.time}ms`;
     if (success) {
         colourBoard();
     }

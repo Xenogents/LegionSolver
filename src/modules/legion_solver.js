@@ -376,16 +376,19 @@ class LegionSolver {
     pause() {
         this.time -= new Date().getTime();
         if (this.iterations != 0) {
-            document.getElementById("iterations").innerText = `Iterations: ${this.iterations}`;
-            document.getElementById("time").innerText = `Time: ${-this.time}ms`;
+            document.getElementById("iterations").style.display = 'block';
+            document.getElementById("iterationsValue").innerText = `${this.iterations}`;
+
+            document.getElementById("time").style.display = 'block';
+            document.getElementById("timeValue").innerText = `${-this.time}ms`;
         }
         this.pausePromise = new Promise(resolve => this.pauseResolve = resolve);
     }
 
     continue() {
         this.time += new Date().getTime();
-        document.getElementById("iterations").innerText = "";
-        document.getElementById("time").innerText = "";
+        document.getElementById("iterations").style.display = 'none';
+        document.getElementById("time").style.display = 'none';
         this.pauseResolve();
         this.pausePromise = null;
     }
