@@ -47,7 +47,7 @@ class LegionSolver {
                 this.searchSurroundings(j, i);
             }
         }
-        
+
         this.longSpaces = [];
         for (let i = 0; i < this.board.length; i++) {
             for (let j = 0; j < this.board[0].length; j++) {
@@ -193,9 +193,9 @@ class LegionSolver {
     }
 
     isValid() {
-        if (this.middle.length == 0) 
+        if (this.middle.length == 0)
             return true;
-        
+
         let normalPieces = 0;
         for (let point of this.middle) {
             if (this.board[point.y][point.x] > 0 && this.board[point.y][point.x] <= this.pieceLength) {
@@ -205,7 +205,7 @@ class LegionSolver {
 
         this.valid = normalPieces != this.middle.length;
     }
-    
+
     isPlaceable(position, piece) {
         if (!piece) {
             return false;
@@ -256,7 +256,7 @@ class LegionSolver {
                 this.firstAlgorithm = false;
             }
         }
-        for (let point of realPoints) {    
+        for (let point of realPoints) {
             this.searchSurroundings(point.x, point.y + 1)
             this.searchSurroundings(point.x, point.y - 1)
             this.searchSurroundings(point.x + 1, point.y)

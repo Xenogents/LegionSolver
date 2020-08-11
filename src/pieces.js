@@ -147,7 +147,7 @@ for (let i = 0; i < defaultPieces.length; i++) {
         <div id="pieceDescription${i+1}"></div>
         <label for="piece${i+1}">
             <table id="pieceDisplay${i+1}">
-                <tbody>${grid}</tbody> 
+                <tbody>${grid}</tbody>
             </table>
         </label>
         <input id="piece${i+1}" type="number" min=0 value=0>

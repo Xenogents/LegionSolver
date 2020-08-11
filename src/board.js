@@ -100,7 +100,7 @@ function setLegionGroups() {
             legionGroups[15].push(new Point(board.length - j - 1, i));
         }
     }
-}  
+}
 
 function setLegionBorders() {
     for (let i = 0; i < board[0].length / 2; i++) {
@@ -129,7 +129,7 @@ function setLegionBorders() {
     }
     for (let i = Math.ceil(board[0].length / 4); i < Math.floor(3 * board[0].length / 4); i++) {
         getLegionCell(board.length / 4, i).style.borderTopWidth = '3px';
-        getLegionCell(3 * board.length / 4, i).style.borderTopWidth = '3px';   
+        getLegionCell(3 * board.length / 4, i).style.borderTopWidth = '3px';
     }
 }
 
@@ -227,7 +227,7 @@ function hoverOverBoard(i, j) {
                 }
             } else {
                 if (isDarkMode) {
-                    getLegionCell(point.x, point.y).style.background = 'rgb(20, 20, 20)';  
+                    getLegionCell(point.x, point.y).style.background = 'rgb(20, 20, 20)';
                 } else {
                     getLegionCell(point.x, point.y).style.background = 'dimgrey';
                 }
@@ -238,20 +238,20 @@ function hoverOverBoard(i, j) {
     } else {
         if (board[i][j] == -1) {
             if (isDarkMode) {
-                getLegionCell(i, j).style.background = 'dimgrey';    
+                getLegionCell(i, j).style.background = 'dimgrey';
             } else {
                 getLegionCell(i, j).style.background = 'silver';
             }
         } else {
             if (isDarkMode) {
-                getLegionCell(i, j).style.background = 'rgb(20, 20, 20)';     
+                getLegionCell(i, j).style.background = 'rgb(20, 20, 20)';
             } else {
                 getLegionCell(i, j).style.background = 'dimgrey';
             }
         }
 
     }
-} 
+}
 
 function hoverOffBoard(i, j) {
     if (state != states.START) {
@@ -271,7 +271,6 @@ function hoverOffBoard(i, j) {
         } else {
             getLegionCell(i, j).style.background = pieceColours.get(0);
         }
-        
     }
 }
 
