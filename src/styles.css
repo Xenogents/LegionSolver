@@ -36,8 +36,8 @@ form {
 }
 
 #legionBoard td.legionCell {
-    width: 24px;
-    height: 27px;
+    width: 25px;
+    height: 28px;
     border-style: solid;
     border-width: 1px;
 }
@@ -71,7 +71,7 @@ form {
     justify-content: flex-end;
 }
 
-#iterations, #time {
+#iterations, #time, #resetButton {
   visibility: hidden;
 }
 
