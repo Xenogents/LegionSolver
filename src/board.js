@@ -62,7 +62,7 @@ document.getElementById("bigClick").addEventListener("click", activateBigClick);
 document.getElementById("liveSolve").addEventListener("click", activateLiveSolve);
 document.getElementById("clearBoard").addEventListener("click", clearBoard);
 document.getElementById("boardButton").addEventListener("click", handleButton);
-document.getElementById("resetButton").addEventListener("click", resetDuringPause)
+document.getElementById("resetButton").addEventListener("click", reset)
 document.getElementById("darkMode").addEventListener("click", activateDarkMode)
 document.getElementById("resetButton").style.visibility = 'hidden';
 
@@ -361,13 +361,14 @@ function activateLiveSolve() {
     }
 }
 
-function resetDuringPause() {
+function reset() {
     resetBoard();
     document.getElementById("clearBoard").disabled = false;
     document.getElementById("boardButton").innerText = "Start";
     document.getElementById("resetButton").style.visibility = 'hidden';
-    document.getElementById("iterations").style.display = 'none';
-    document.getElementById("time").style.display = 'none';
+    document.getElementById("iterations").style.visibility = 'hidden';
+    document.getElementById("time").style.visibility = 'hidden';
+    document.getElementById("failText").style.visibility = 'hidden';
     state = states.START;
 }
 
@@ -378,7 +379,7 @@ async function handleButton(evt) {
         state = states.RUNNING;
         let success = await runSolver();
         if (!success) {
-          document.getElementById("failText").style.display = 'block';
+          document.getElementById("failText").style.visibility = 'visible';
         }
         evt.target.innerText = "Reset";
         state = states.COMPLETED;
@@ -397,13 +398,7 @@ async function handleButton(evt) {
         state = states.RUNNING
         document.getElementById("resetButton").style.visibility = 'hidden';
     } else if (state == states.COMPLETED) {
-        resetBoard();
-        document.getElementById("clearBoard").disabled = false;
-        document.getElementById("failText").style.display = 'none';
-        document.getElementById("iterations").style.display = 'none';
-        document.getElementById("time").style.display = 'none';
-        evt.target.innerText = "Start";
-        state = states.START;
+        reset();
     }
 }
 
@@ -486,10 +481,10 @@ async function runSolver() {
         finishedSolver = legionSolvers[3];
     }
 
-    document.getElementById("iterations").style.display = 'block';
+    document.getElementById("iterations").style.visibility = 'visible';
     document.getElementById("iterationsValue").innerText = `${finishedSolver.iterations}`;
 
-    document.getElementById("time").style.display = 'block';
+    document.getElementById("time").style.visibility = 'visible';
     document.getElementById("timeValue").innerText = `${new Date().getTime() - finishedSolver.time}ms`;
     if (success) {
         colourBoard();

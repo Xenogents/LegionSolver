@@ -72,7 +72,7 @@ form {
 }
 
 #iterations, #time {
-  display: none;
+  visibility: hidden;
 }
 
 #boardFilled {
@@ -112,7 +112,7 @@ form {
 
 #failText {
     text-align: right;
-    display: none;
+    visibility: hidden;
 }
 
 #bigClick, #liveSolve {
