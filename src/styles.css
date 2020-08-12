@@ -7,18 +7,13 @@ form {
     margin-bottom: 0;
 }
 
-#languageSelectBox {
-  height: 20px;
-  float: right;
-}
-
 #title {
   display: flex;
   justify-content: center;
   align-items: center;
 }
 
-#languageSelectWrapper {
+#header {
   position: absolute;
   display: flex;
   justify-content: flex-end;
@@ -37,7 +32,7 @@ form {
 
 #legionBoard td.legionCell {
     width: 25px;
-    height: 28px;
+    height: 27px;
     border-style: solid;
     border-width: 1px;
 }
