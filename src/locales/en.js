@@ -15,8 +15,10 @@ export default {
     liveSolve: 'Live Solve',
     darkMode: 'Dark Mode',
 
-    boardButton: 'Start',
-    resetButton: 'Reset',
+    start: 'Start',
+    pause: 'Pause',
+    continue: 'Continue',
+    reset: 'Reset',
     clearPieces: 'Clear Pieces',
     clearBoard: 'Clear Board',
     failText: 'No Solution Found',
