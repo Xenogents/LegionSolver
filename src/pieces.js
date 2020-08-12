@@ -1,5 +1,6 @@
 import { Piece } from './modules/piece.js';
 import { sumBy } from 'lodash';
+import { i18n, getCurrentLanguage } from './i18n.js';
 
 // TODO: Remove extra 2s.
 
@@ -54,12 +55,6 @@ const defaultPieces = [
         [0, 2, 1]
     ],
 
-    // Lvl 250 Enhanced Lab'
-    [
-        [1, 0, 0, 0, 1],
-        [0, 1, 2, 1, 0]
-    ],
-
     // Lvl 250 Warrior
     [
         [1, 1, 2],
@@ -97,11 +92,19 @@ const defaultPieces = [
         [0, 2, 0],
         [0, 1, 1]
     ],
+];
 
+const gmsPieces = [
     // Lvl 200 Enhanced Lab
     [
         [1, 0, 0, 0],
         [0, 1, 2, 1]
+    ],
+
+    // Lvl 250 Enhanced Lab
+    [
+        [1, 0, 0, 0, 1],
+        [0, 1, 2, 1, 0]
     ],
 
     // Lvl 250 Lab
@@ -112,8 +115,14 @@ const defaultPieces = [
 ];
 
 const pieces = []
-for (let i = 0; i < defaultPieces.length; ++i){
-    pieces.push(Piece.createPiece(defaultPieces[i], 0));
+for (let piece of defaultPieces){
+    pieces.push(Piece.createPiece(piece, 0));
+}
+
+if (getCurrentLanguage() == 'GMS') {
+    for (let piece of gmsPieces){
+        pieces.push(Piece.createPiece(piece, 0));
+    }
 }
 
 let pieceColours = new Map();
@@ -129,20 +138,20 @@ for (let i = 0; i < 2; i++) {
     pieceColours.set(7 + i * 18, 'purple');
     pieceColours.set(8 + i * 18, 'dodgerblue');
     pieceColours.set(9 + i * 18, 'lightsteelblue');
-    pieceColours.set(10 + i * 18, 'aquamarine');
-    pieceColours.set(11 + i * 18, 'maroon');
-    pieceColours.set(12 + i * 18, 'green');
-    pieceColours.set(13 + i * 18, 'indigo');
-    pieceColours.set(14 + i * 18, 'blue');
-    pieceColours.set(15 + i * 18, 'cadetblue');
-    pieceColours.set(16 + i * 18, 'mediumpurple');
+    pieceColours.set(10 + i * 18, 'maroon');
+    pieceColours.set(11 + i * 18, 'green');
+    pieceColours.set(12 + i * 18, 'indigo');
+    pieceColours.set(13 + i * 18, 'blue');
+    pieceColours.set(14 + i * 18, 'cadetblue');
+    pieceColours.set(15 + i * 18, 'mediumpurple');
+    pieceColours.set(16 + i * 18, 'aquamarine');
     pieceColours.set(17 + i * 18, 'aquamarine');
     pieceColours.set(18 + i * 18, 'aquamarine');
 }
 
-for (let i = 0; i < defaultPieces.length; i++) {
-    let row = '<td class="pieceCell"></td>'.repeat(defaultPieces[i][0].length);
-    let grid = `<tr>${row}</tr>`.repeat(defaultPieces[i].length);
+for (let i = 0; i < pieces.length; i++) {
+    let row = '<td class="pieceCell"></td>'.repeat(pieces[i].shape[0].length);
+    let grid = `<tr>${row}</tr>`.repeat(pieces[i].shape.length);
     document.querySelector('#pieceForm form').innerHTML += `<div class="piece">
         <div id="pieceDescription${i+1}"></div>
         <label for="piece${i+1}">
@@ -157,15 +166,37 @@ for (let i = 0; i < defaultPieces.length; i++) {
     document.getElementById(`pieceDisplay${i+1}`).style.borderSpacing = '0';
     document.getElementById(`pieceDescription${i+1}`).style.paddingRight = '15px';
 
-    for (let j = 0; j < defaultPieces[i].length; j++) {
-        for (let k = 0; k < defaultPieces[i][j].length; k++) {
-            if (defaultPieces[i][j][k] != 0) {
+    for (let j = 0; j < pieces[i].shape.length; j++) {
+        for (let k = 0; k < pieces[i].shape[j].length; k++) {
+            if (pieces[i].shape[j][k] != 0) {
                 document.getElementById(`pieceDisplay${i+1}`)
                 .getElementsByTagName("tr")[j]
                 .getElementsByTagName("td")[k].style.background = pieceColours.get(i+1);
             }
         }
     }
+}
+
+document.getElementById('pieceDescription1').textContent = i18n('lvl60');
+document.getElementById('pieceDescription2').textContent = i18n('lvl100');
+document.getElementById('pieceDescription3').textContent = i18n('warriorPirate140');
+document.getElementById('pieceDescription4').textContent = i18n('mageThiefArcher140');
+document.getElementById('pieceDescription5').textContent = i18n('warrior200');
+document.getElementById('pieceDescription6').textContent = i18n('archer200');
+document.getElementById('pieceDescription7').textContent = i18n('thiefLab200');
+document.getElementById('pieceDescription8').textContent = i18n('mage200');
+document.getElementById('pieceDescription9').textContent = i18n('pirate200');
+document.getElementById('pieceDescription10').textContent = i18n('warrior250');
+document.getElementById('pieceDescription11').textContent = i18n('archer250');
+document.getElementById('pieceDescription12').textContent = i18n('thief250');
+document.getElementById('pieceDescription13').textContent = i18n('mage250');
+document.getElementById('pieceDescription14').textContent = i18n('pirate250');
+document.getElementById('pieceDescription15').textContent = i18n('xenon250');
+
+if (getCurrentLanguage() == 'GMS') {
+    document.getElementById('pieceDescription16').textContent = i18n('enhancedLab200');
+    document.getElementById('pieceDescription17').textContent = i18n('enhancedLab250');
+    document.getElementById('pieceDescription18').textContent = i18n('lab250');
 }
 
 let currentPieces = 0;
@@ -176,8 +207,8 @@ if (localStorage.getItem("currentPieces")) {
 
 let pieceAmounts = JSON.parse(localStorage.getItem("pieceAmounts"))
 if (pieceAmounts) {
-    for (let i = 0; i < defaultPieces.length; i++) {
-        document.getElementById(`piece${i+1}`).value = pieceAmounts[i];
+    for (let i = 0; i < pieces.length; i++) {
+        document.getElementById(`piece${i+1}`).value = pieceAmounts[i] || 0;
     }
 
     updateCurrentPieces();

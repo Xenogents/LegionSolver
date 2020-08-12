@@ -1,6 +1,7 @@
 import { Point } from './modules/point.js';
 import { LegionSolver } from './modules/legion_solver.js';
 import { pieceColours, pieces } from './pieces.js';
+import { i18n } from './i18n.js';
 
 let board = JSON.parse(localStorage.getItem("legionBoard"));
 if (!board) {
@@ -62,9 +63,8 @@ document.getElementById("bigClick").addEventListener("click", activateBigClick);
 document.getElementById("liveSolve").addEventListener("click", activateLiveSolve);
 document.getElementById("clearBoard").addEventListener("click", clearBoard);
 document.getElementById("boardButton").addEventListener("click", handleButton);
-document.getElementById("resetButton").addEventListener("click", reset)
-document.getElementById("darkMode").addEventListener("click", activateDarkMode)
-document.getElementById("resetButton").style.visibility = 'hidden';
+document.getElementById("resetButton").addEventListener("click", reset);
+document.getElementById("darkMode").addEventListener("click", activateDarkMode);
 
 for (let i = 0; i < board.length; i++) {
     for (let j = 0; j < board[0].length; j++) {
@@ -364,7 +364,7 @@ function activateLiveSolve() {
 function reset() {
     resetBoard();
     document.getElementById("clearBoard").disabled = false;
-    document.getElementById("boardButton").innerText = "Start";
+    document.getElementById("boardButton").innerText = i18n("start");
     document.getElementById("resetButton").style.visibility = 'hidden';
     document.getElementById("iterations").style.visibility = 'hidden';
     document.getElementById("time").style.visibility = 'hidden';
@@ -374,24 +374,24 @@ function reset() {
 
 async function handleButton(evt) {
     if (state == states.START) {
-        evt.target.innerText = "Pause";
+        evt.target.innerText = i18n("pause");
         document.getElementById("clearBoard").disabled = true;
         state = states.RUNNING;
         let success = await runSolver();
         if (!success) {
           document.getElementById("failText").style.visibility = 'visible';
         }
-        evt.target.innerText = "Reset";
+        evt.target.innerText = i18n("reset");
         state = states.COMPLETED;
     } else if (state == states.RUNNING) {
-        evt.target.innerText = "Continue";
+        evt.target.innerText = i18n("continue");
         for (let solvers of legionSolvers) {
             solvers.pause();
         }
         state = states.PAUSED;
         document.getElementById("resetButton").style.visibility = 'visible';
     } else if (state == states.PAUSED) {
-        evt.target.innerText = "Pause";
+        evt.target.innerText = i18n("pause");
         for (let solvers of legionSolvers) {
             solvers.continue();
         }
