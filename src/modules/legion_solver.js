@@ -1,6 +1,5 @@
 import { Point } from './point.js';
 import { Piece } from './piece.js';
-import _ from 'lodash';
 
 class LegionSolver {
     pausePromise;
