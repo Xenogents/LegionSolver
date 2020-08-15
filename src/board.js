@@ -28,10 +28,8 @@ for (let i = 0; i < 16; i++) {
     legionGroups[i] = [];
 }
 
-const row = '<td class="legionCell"></td>'.repeat(board[0].length);
-for (let i = 0; i < board.length; i++) {
-    document.querySelector('#legionBoard tbody').innerHTML += `<tr>${row}</tr>`;
-}
+document.querySelector('#legionBoard tbody').innerHTML =
+    board.map(row => `<tr>${row.map(_ => `<td class="legionCell"></td>`).join('')}</tr>`).join('');
 
 setLegionBorders();
 setLegionGroups();
@@ -66,14 +64,33 @@ document.getElementById("boardButton").addEventListener("click", handleButton);
 document.getElementById("resetButton").addEventListener("click", reset);
 document.getElementById("darkMode").addEventListener("click", activateDarkMode);
 
+let dragging = false;
+let dragValue;
 for (let i = 0; i < board.length; i++) {
     for (let j = 0; j < board[0].length; j++) {
         let grid = getLegionCell(i, j)
-        grid.addEventListener("click", function() {clickBoard(i, j);});
-        grid.addEventListener("mouseover", function() {hoverOverBoard(i, j)});
-        grid.addEventListener("mouseout", function() {hoverOffBoard(i, j)});
+
+        grid.addEventListener("mousedown", () => {
+            dragValue = board[i][j] == 0 ? -1 : 0;
+            setBoard(i, j, dragValue);
+            dragging = true;
+        });
+        grid.addEventListener("mouseover", () => {
+            if (dragging) {
+                setBoard(i, j, dragValue);
+            } else {
+                hoverOverBoard(i, j);
+            }
+        });
+        grid.addEventListener("mouseout", () => {
+            if (!dragging) {
+                hoverOffBoard(i, j) ;
+            }
+        });
     }
 }
+document.documentElement.addEventListener("mouseup", () => { dragging = false });
+document.getElementById("legion").addEventListener("dragstart", (evt) => evt.preventDefault());
 
 function setLegionGroups() {
     for (let i = 0; i < board.length / 4; i++) {
@@ -171,13 +188,13 @@ function clearBoard() {
     document.getElementById('boardFilledValue').innerText = `${boardFilled}`;
 }
 
-function clickBoard(i, j) {
+function setBoard(i, j, value) {
     if (state != states.START) {
         return;
     }
 
     if (isBigClick) {
-        if (board[i][j] == -1) {
+        if (value == 0) {
             for (let point of legionGroups[findGroupNumber(i, j)]) {
                 let grid = getLegionCell(point.x, point.y);
                 grid.style.background = pieceColours.get(0);
@@ -198,14 +215,18 @@ function clickBoard(i, j) {
         }
     } else {
         let grid = getLegionCell(i, j);
-        if (board[i][j] == 0) {
-            board[i][j] = -1;
-            grid.style.background = pieceColours.get(-1);
-            boardFilled--;
+        if (value == -1) {
+            if (board[i][j] != -1) {
+                board[i][j] = -1;
+                grid.style.background = pieceColours.get(-1);
+                boardFilled--;
+            }
         } else {
-            board[i][j] = 0;
-            grid.style.background = pieceColours.get(0);
-            boardFilled++;
+            if (board[i][j] != 0) {
+                board[i][j] = 0;
+                grid.style.background = pieceColours.get(0);
+                boardFilled++;
+            }
         }
     }
     localStorage.setItem("legionBoard", JSON.stringify(board));
