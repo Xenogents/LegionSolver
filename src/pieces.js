@@ -232,7 +232,7 @@ function updateCurrentPieces() {
 document.getElementById("clearPieces").addEventListener("click", clearPieces);
 
 function clearPieces() {
-    for (let i = 0; i < defaultPieces.length; i++) {
+    for (let i = 0; i < pieces.length; i++) {
         document.getElementById(`piece${i+1}`).value = 0;
     }
 
