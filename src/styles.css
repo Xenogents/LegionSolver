@@ -11,14 +11,12 @@ form {
   display: flex;
   justify-content: center;
   align-items: center;
+  margin-top: 0;
 }
 
 #header {
-  position: absolute;
   display: flex;
   justify-content: flex-end;
-  width: 100%;
-  padding-right: 20px;
 }
 
 #subtitle {
