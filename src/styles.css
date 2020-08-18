@@ -133,3 +133,7 @@ form {
 #paragraph {
     padding-right: 80px;
 }
+
+#currentPieces {
+  white-space: nowrap;
+}
