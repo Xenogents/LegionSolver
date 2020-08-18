@@ -3,8 +3,25 @@ import locales from './locales/index';
 let _cr = getCurrentLanguage();
 
 function getCurrentLanguage() {
+    const region = getRegionByBrowserLanguage();
+
     // default: GMS
-    return localStorage.getItem('i18n') || 'GMS';
+    return localStorage.getItem('i18n') || region || 'GMS';
+}
+
+function getRegionByBrowserLanguage() {
+    const language = window.navigator.userLanguage || window.navigator.language;
+    let resultRegion;
+
+    switch (language) {
+        case 'en': resultRegion = 'GMS'; break;
+        case 'ko': resultRegion = 'KMS'; break;
+        case 'ja': resultRegion = 'JMS'; break;
+
+        default: resultRegion = null; break;
+    }
+
+    return resultRegion;
 }
 
 function setCurrentLanguage() {
