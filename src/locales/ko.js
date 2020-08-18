@@ -37,7 +37,7 @@ export default {
     // Lvl: 200
     warrior200: 'Lvl 200 전사',
     archer200: 'Lvl 200 궁수/메이플M(SS)',
-    thiefLab200: 'Lvl 200 도적/Lab',
+    thiefLab200: 'Lvl 200 도적/제논',
     mage200: 'Lvl 200 마법사',
     pirate200: 'Lvl 200 해적',
 
