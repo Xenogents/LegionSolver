@@ -8,15 +8,15 @@ form {
 }
 
 #title {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin-top: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 0;
 }
 
 #header {
-  display: flex;
-  justify-content: flex-end;
+    display: flex;
+    justify-content: flex-end;
 }
 
 #subtitle {
@@ -135,5 +135,5 @@ form {
 }
 
 #currentPieces {
-  white-space: nowrap;
+    white-space: nowrap;
 }
