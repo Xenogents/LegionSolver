@@ -368,8 +368,6 @@ function colourBoard() {
             }
         }
     }
-
-    pieceHistory = [];
 }
 
 function activateDarkMode() {
@@ -459,6 +457,7 @@ async function handleButton(evt) {
         document.getElementById("resetButton").style.visibility = 'visible';
     } else if (state == states.PAUSED) {
         evt.target.innerText = i18n("pause");
+        pieceHistory = [];
         for (let solvers of legionSolvers) {
             solvers.continue();
         }
@@ -495,6 +494,7 @@ async function runSolver() {
         }
     }
 
+    pieceHistory = [];
     legionSolvers.push(new LegionSolver(board, _.cloneDeep(pieces), onBoardUpdated));
     legionSolvers.push(new LegionSolver(rightBoard, _.cloneDeep(pieces), () => false));
     legionSolvers.push(new LegionSolver(downBoard, _.cloneDeep(pieces), () => false));
@@ -587,7 +587,6 @@ async function runSolver() {
 }
 
 function onBoardUpdated() {
-    
     if (isLiveSolve) {
         drawBoard();
     }
