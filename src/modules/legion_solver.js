@@ -21,6 +21,7 @@ class LegionSolver {
         this.restrictedPieceNumber = 0;
         this.restrictedTransformationNumber = 0;
         this.time = new Date().getTime();
+        this.history = [];
 
         this.middle = [];
         for (let i = this.board.length / 2 - 1; i < this.board.length / 2 + 1; i++) {
@@ -229,6 +230,7 @@ class LegionSolver {
 
     placePiece(position, piece) {
         let realPoints = []
+        this.history[this.history.length] = [];
         for (let point of piece.pointShape) {
             let x;
             let y;
@@ -239,6 +241,7 @@ class LegionSolver {
                 this.board[y][x] = piece.id + 18;
             }
             realPoints.push(new Point(x, y))
+            this.history[this.history.length - 1].push(new Point(x, y))
             for (let i = 0; i < this.restrictedSpots.length; i++) {
                 if (this.restrictedSpots[i].x == x && this.restrictedSpots[i].y == y) {
                     this.restrictedSpots.splice(i, 1)
@@ -277,6 +280,7 @@ class LegionSolver {
     }
 
     takeBackPiece(position, piece) {
+        this.history.pop();
         for (let point of piece.pointShape) {
             let x;
             let y;
