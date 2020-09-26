@@ -1,5 +1,5 @@
 import { Piece } from './modules/piece.js';
-import { sumBy } from 'lodash';
+import { sumBy, isEqual } from 'lodash';
 import { i18n, getCurrentLanguage } from './i18n.js';
 
 // TODO: Remove extra 2s.
@@ -119,7 +119,11 @@ for (let piece of defaultPieces){
     pieces.push(Piece.createPiece(piece, 0));
 }
 
-if (getCurrentLanguage() == 'GMS') {
+function hasLabPieces() {
+    return !!['GMS', 'TMS'].find(lang => lang === getCurrentLanguage());
+}
+
+if (hasLabPieces()) {
     for (let piece of gmsPieces){
         pieces.push(Piece.createPiece(piece, 0));
     }
@@ -193,7 +197,7 @@ document.getElementById('pieceDescription13').textContent = i18n('mage250');
 document.getElementById('pieceDescription14').textContent = i18n('pirate250');
 document.getElementById('pieceDescription15').textContent = i18n('xenon250');
 
-if (getCurrentLanguage() == 'GMS') {
+if (hasLabPieces()) {
     document.getElementById('pieceDescription16').textContent = i18n('enhancedLab200');
     document.getElementById('pieceDescription17').textContent = i18n('enhancedLab250');
     document.getElementById('pieceDescription18').textContent = i18n('lab250');
