@@ -1,8 +1,8 @@
 export default {
     title: '유니온 지도 메이커',
     instructions: '설명:',
-    instructionsSub1: '1. 유니온 지도를 더 빨리 채우려면 지역 선택을 활성화해 줍니다.',
-    instructionsSub2: '2. 유니온 지도에 채우려는 직업별 모양의 양을 입력해 줍니다.',
+    instructionsSub1: '1. 유니온 지도를 더 빨리 채우려면 지역선택 버튼을 활성화 한 후 지역을 선택하세요.',
+    instructionsSub2: '2. 유니온 지도에 채우려는 직업의 수를 입력하세요.',
     instructionsSub3: '3. 산정된 공간은 선택된 공간의 양과 같아야 하며 같지 않다면 프로그램은 계속 반복 실행할 겁니다.',
     instructionsSub4: '4. 프로그램이 루트를 찾고 있을 때 해당 과정을 보고 싶다면 실시간 보기를 활성화해 줍니다.',
 
@@ -37,7 +37,7 @@ export default {
     // Lvl: 200
     warrior200: 'Lvl 200 전사',
     archer200: 'Lvl 200 궁수/메이플M(SS)',
-    thiefLab200: 'Lvl 200 도적/Lab',
+    thiefLab200: 'Lvl 200 도적/제논',
     mage200: 'Lvl 200 마법사',
     pirate200: 'Lvl 200 해적',
 
