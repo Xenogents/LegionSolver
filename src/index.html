@@ -8,9 +8,10 @@
 <body id = "body">
   <div id="header">
     <select id="languageSelectBox">
-      <option id="GMS" value="GMS">GMS</option>
-      <option id="KMS" value="KMS">KMS</option>
-      <option id="JMS" value="JMS">JMS</option>
+      <% for(var i=0; i < htmlWebpackPlugin.options.languages.length; i++) {%>
+        <% const lang = htmlWebpackPlugin.options.languages[i] %>
+        <option id="<%= lang %>" value="<%= lang %>"><%= lang %></option>
+      <% } %>
     </select>
   </div>
   <h1 id="title">Legion Solver</h1>

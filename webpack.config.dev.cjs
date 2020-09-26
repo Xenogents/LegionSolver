@@ -1,5 +1,7 @@
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 
+const languages = ['GMS', 'KMS', 'JMS', 'TMS'];
+
 module.exports = {
     entry: './src/main.js',
     output: {
@@ -28,7 +30,8 @@ module.exports = {
     plugins: [
         new HtmlWebpackPlugin({
             template: 'src/index.html',
-            inject: false
+            inject: false,
+            languages
         }),
     ],
     watch: true,
