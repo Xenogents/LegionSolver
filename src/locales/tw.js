@@ -50,7 +50,7 @@ export default {
   xenon250: 'Lvl 250 傑諾',
 
   /** special jobs */
-  enhancedLab200: 'Lvl 200 Enhanced Lab',
-  enhancedLab250: 'Lvl 250 Enhanced Lab',
+  enhancedLab200: 'Lvl 200 強化型 Lab',
+  enhancedLab250: 'Lvl 250 強化型 Lab',
   lab250: 'Lvl 250 Lab'
-}
+};
