@@ -14,6 +14,7 @@ if (!board) {
     }
 }
 let legionSolvers = [];
+let pieceHistory = [];
 
 const states = {
     START: 'start',
@@ -31,9 +32,8 @@ for (let i = 0; i < 16; i++) {
 document.querySelector('#legionBoard tbody').innerHTML =
     board.map(row => `<tr>${row.map(_ => `<td class="legionCell"></td>`).join('')}</tr>`).join('');
 
-setLegionBorders();
+drawBoard();
 setLegionGroups();
-colourBoard();
 
 let boardFilled = 0;
 if (localStorage.getItem("boardFilled")) {
@@ -120,6 +120,11 @@ function setLegionGroups() {
 }
 
 function setLegionBorders() {
+    for (let i = 0; i < board.length; i++) {
+        for (let j = 0; j < board[0].length; j++) {
+            getLegionCell(i, j).style.borderWidth = '1px';
+        }
+    }
     for (let i = 0; i < board[0].length / 2; i++) {
         getLegionCell(i, i).style.borderTopWidth = '3px';
         getLegionCell(i, i).style.borderRightWidth = '3px';
@@ -300,6 +305,7 @@ function resetBoard() {
         for (let i = 0; i < legionSolvers[k].board.length; i++) {
             for (let j = 0; j < legionSolvers[k].board[0].length; j++) {
                 if (k == 0) {
+                    getLegionCell(i, j).style.borderWidth = '1px';
                     if (legionSolvers[k].board[i][j] >= 0) {
                         getLegionCell(i, j).style.background = pieceColours.get(0);
                         legionSolvers[k].board[i][j] = 0;
@@ -313,7 +319,14 @@ function resetBoard() {
         }
     }
 
+
+    setLegionBorders();
     legionSolvers = [];
+}
+
+function drawBoard() {
+    setLegionBorders();
+    colourBoard();
 }
 
 function colourBoard() {
@@ -322,6 +335,37 @@ function colourBoard() {
         for (let j = 0; j < board[0].length; j++) {
             spot = board[i][j];
             getLegionCell(i, j).style.background = pieceColours.get(spot);
+        }
+    }
+
+    if (pieceHistory.length == 0 && legionSolvers[0]) {
+        pieceHistory = legionSolvers[0].history;
+    }
+
+    for (let piece of pieceHistory) {
+        for (let i = 0; i < piece.length; i++) {
+            if (board[piece[i].y][piece[i].x - 1] > 0 && (getLegionCell(piece[i].y, piece[i].x).style.borderLeftWidth == '3px' || getLegionCell(piece[i].y, piece[i].x - 1).style.borderRightWidth == '3px')) {
+                getLegionCell(piece[i].y, piece[i].x).style.borderLeftWidth = '1px';
+                getLegionCell(piece[i].y, piece[i].x - 1).style.borderRightWidth = '1px';
+            }
+            if (board[piece[i].y - 1] && board[piece[i].y - 1][piece[i].x] > 0 && (getLegionCell(piece[i].y, piece[i].x).style.borderTopWidth == '3px' || getLegionCell(piece[i].y - 1, piece[i].x).style.borderBottomWidth == '3px' )) {
+                getLegionCell(piece[i].y, piece[i].x).style.borderTopWidth = '1px';
+                getLegionCell(piece[i].y - 1, piece[i].x).style.borderBottomWidth = '1px';
+            }
+            for (let j = 0; j < piece.length; j++) {
+                if (i != j && piece[i].x - 1 == piece[j].x && piece[i].y == piece[j].y) {
+                    getLegionCell(piece[i].y, piece[i].x).style.borderLeftWidth = '0px';
+                    if (board[0][piece[i].x - 1]) {
+                        getLegionCell(piece[i].y, piece[i].x - 1).style.borderRightWidth = '0px';
+                    }
+                }
+                if (i != j && piece[i].x == piece[j].x && piece[i].y - 1 == piece[j].y) {
+                    getLegionCell(piece[i].y, piece[i].x).style.borderTopWidth = '0px';
+                    if (board[piece[i].y - 1]) {
+                        getLegionCell(piece[i].y - 1, piece[i].x).style.borderBottomWidth = '0px';
+                    }
+                }
+            }
         }
     }
 }
@@ -348,7 +392,7 @@ function activateDarkMode() {
         pieceColours.set(-1, 'white');
         pieceColours.set(0, 'grey');
     }
-    colourBoard();
+    drawBoard();
     for (let i = 0; i < board.length; i++) {
         for (let j = 0; j < board[0].length; j++) {
             cell = getLegionCell(i, j);
@@ -378,7 +422,7 @@ function activateLiveSolve() {
     isLiveSolve = !isLiveSolve;
     localStorage.setItem("isLiveSolve", JSON.stringify(isLiveSolve));
     if (isLiveSolve && state != states.COMPLETED) {
-        colourBoard();
+        drawBoard();
     }
 }
 
@@ -413,6 +457,7 @@ async function handleButton(evt) {
         document.getElementById("resetButton").style.visibility = 'visible';
     } else if (state == states.PAUSED) {
         evt.target.innerText = i18n("pause");
+        pieceHistory = [];
         for (let solvers of legionSolvers) {
             solvers.continue();
         }
@@ -449,6 +494,7 @@ async function runSolver() {
         }
     }
 
+    pieceHistory = [];
     legionSolvers.push(new LegionSolver(board, _.cloneDeep(pieces), onBoardUpdated));
     legionSolvers.push(new LegionSolver(rightBoard, _.cloneDeep(pieces), () => false));
     legionSolvers.push(new LegionSolver(downBoard, _.cloneDeep(pieces), () => false));
@@ -479,27 +525,54 @@ async function runSolver() {
             }
         }
         finishedSolver = legionSolvers[0];
+        pieceHistory = legionSolvers[0].history;
     } else if (legionSolvers[1].success !== undefined) {
         for (let i = 0; i < legionSolvers[1].board[0].length; i++) {
             for (let j = 0; j < legionSolvers[1].board.length; j++) {
                 board[i][j] = legionSolvers[1].board[j][legionSolvers[1].board[0].length - 1 - i];
             }
         }
+
+        for (let piece of legionSolvers[1].history) {
+            for (let point of piece) {
+                let holder = point.y
+                point.y = legionSolvers[1].board[0].length - 1 - point.x
+                point.x = holder;
+            }
+        }
         finishedSolver = legionSolvers[1];
+        pieceHistory = legionSolvers[1].history
     } else if (legionSolvers[2].success !== undefined) {
         for (let i = 0; i < legionSolvers[2].board.length; i++) {
             for (let j = 0; j < legionSolvers[2].board[0].length; j++) {
                 board[i][j] = legionSolvers[2].board[legionSolvers[2].board.length - 1 - i][legionSolvers[2].board[0].length - 1 - j];
             }
         }
+
+        for (let piece of legionSolvers[2].history) {
+            for (let point of piece) {
+                point.y = legionSolvers[2].board.length - 1 - point.y
+                point.x = legionSolvers[2].board[0].length - 1 - point.x
+            }
+        }
         finishedSolver = legionSolvers[2];
+        pieceHistory = legionSolvers[2].history
     } else if (legionSolvers[3].success !== undefined) {
         for (let i = 0; i < legionSolvers[3].board[0].length; i++) {
             for (let j = 0; j < legionSolvers[3].board.length; j++) {
                 board[i][j] = legionSolvers[3].board[legionSolvers[3].board.length - j - 1][i];
             }
         }
+
+        for (let piece of legionSolvers[3].history) {
+            for (let point of piece) {
+                let holder = point.x
+                point.x = legionSolvers[3].board.length - 1 - point.y
+                point.y = holder
+            }
+        }
         finishedSolver = legionSolvers[3];
+        pieceHistory = legionSolvers[3].history
     }
 
     document.getElementById("iterations").style.visibility = 'visible';
@@ -508,14 +581,14 @@ async function runSolver() {
     document.getElementById("time").style.visibility = 'visible';
     document.getElementById("timeValue").innerText = `${new Date().getTime() - finishedSolver.time}ms`;
     if (success) {
-        colourBoard();
+        drawBoard();
     }
     return success;
 }
 
 function onBoardUpdated() {
     if (isLiveSolve) {
-        colourBoard();
+        drawBoard();
     }
 }
 
