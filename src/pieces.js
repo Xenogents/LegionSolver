@@ -1,5 +1,5 @@
 import { Piece } from './modules/piece.js';
-import { sumBy, isEqual } from 'lodash';
+import { sumBy } from 'lodash';
 import { i18n, getCurrentLanguage } from './i18n.js';
 
 // TODO: Remove extra 2s.
