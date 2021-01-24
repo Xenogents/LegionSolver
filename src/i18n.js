@@ -33,15 +33,15 @@ function i18n(key) {
 }
 
 document.getElementById('title').textContent = i18n('title');
-getTextNodesIn(document.getElementById('instructions'), true)[0].textContent = i18n('instructions');
-getTextNodesIn(document.getElementById('paragraph'), true)[0].textContent = i18n('instructionsSub1');
-getTextNodesIn(document.getElementById('paragraph'), true)[1].textContent = i18n('instructionsSub2');
-getTextNodesIn(document.getElementById('paragraph'), true)[2].textContent = i18n('instructionsSub3');
-getTextNodesIn(document.getElementById('paragraph'), true)[3].textContent = i18n('instructionsSub4');
-getTextNodesIn(document.getElementById('currentPieces'), true)[0].textContent = i18n('spacesToBeFilled');
-getTextNodesIn(document.getElementById('boardFilled'), true)[0].textContent = i18n('boardSpacesFilled');
-getTextNodesIn(document.getElementById('iterations'), true)[0].textContent = i18n('iterations');
-getTextNodesIn(document.getElementById('time'), true)[0].textContent = i18n('time');
+getTextNodesIn(document.getElementById('instructions'))[0].textContent = i18n('instructions');
+getTextNodesIn(document.getElementById('paragraph'))[0].textContent = i18n('instructionsSub1');
+getTextNodesIn(document.getElementById('paragraph'))[1].textContent = i18n('instructionsSub2');
+getTextNodesIn(document.getElementById('paragraph'))[2].textContent = i18n('instructionsSub3');
+getTextNodesIn(document.getElementById('paragraph'))[3].textContent = i18n('instructionsSub4');
+getTextNodesIn(document.getElementById('currentPieces'))[0].textContent = i18n('spacesToBeFilled');
+getTextNodesIn(document.getElementById('boardFilled'))[0].textContent = i18n('boardSpacesFilled');
+getTextNodesIn(document.getElementById('iterations'))[0].textContent = i18n('iterations');
+getTextNodesIn(document.getElementById('time'))[0].textContent = i18n('time');
 
 document.querySelector('label[for="bigClick"]').textContent = i18n('bigClick');
 document.querySelector('label[for="liveSolve"]').textContent = i18n('liveSolve');

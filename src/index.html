@@ -14,12 +14,12 @@
       <% } %>
     </select>
   </div>
-  <h1 id="title"></h1>
+  <h1 id="title">Legion Solver</h1>
   <div id="subtitle">Made by: Xenogent of Bera</div>
   <div id="legionWrapper" class="centerMiddleChild">
     <div id="pieceForm">
       <form></form>
-      <button id = "clearPieces"></button>
+      <button id = "clearPieces">Clear Pieces</button>
     </div>
     <div id="legion">
       <table id="legionBoard">
@@ -28,44 +28,47 @@
       <div id="legionFooter" class="centerMiddleChild">
         <div id="labels">
           <div id="currentPieces">
-            <span id="currentPiecesValue">0</span>
+            Spaces to be Filled: <span id="currentPiecesValue">0</span>
           </div>
           <div id="boardFilled">
-            <span id="boardFilledValue">0</span>
+            Board Spaces Filled: <span id="boardFilledValue">0</span>
           </div>
-          <button id="clearBoard"></button>
+          <button id="clearBoard">Clear Board</button>
         </div>
         <div id = "middlelabels">
-          <button id="boardButton"></button>
-          <button id="resetButton"></button>
+          <button id="boardButton">Start</button>
+          <button id="resetButton">Reset</button>
           <div id="failText"></div>
         </div>
         <div id="options">
           <div id="checkboxes">
             <input type="checkbox" id="bigClick"></input>
-            <label for="bigClick"></label>
+            <label for="bigClick">Region Click</label>
             <input type="checkbox" id="liveSolve"></input>
-            <label for="liveSolve"></label>
+            <label for="liveSolve">Live Solve</label>
             <div id = "darkModeLabel"><input type="checkbox" id="darkMode"></input>
-            <label for="darkMode"></label></div>
+            <label for="darkMode">Dark Mode</label></div>
           </div>
           <div id="iterationTime">
             <div id = "iterations">
-              <span id="iterationsValue"></span>
+              Iterations: <span id="iterationsValue"></span>
             </div>
             <div id = "time">
-              <span id="timeValue"></span>
+              Time: <span id="timeValue"></span>
             </div>
           </div>
         </div>
       </div>
     </div>
-    <div id="instructions" style = 'font-size:20px'>
+    <div id="instructions" style = 'font-size:20px'>Instructions:
       <div id="paragraph" style = 'font-size:16px'>
-        <p></p>
-        <p></p>
-        <p></p>
-        <p></p>
+        <p>1. Click the grid spaces you want to be filled, the region click will help you fill it in faster.</p>
+        <p>2. Input the amount of each shape you want to be filled in the board.</p>
+        <p>3. The space that the pieces take up should equal the amount of grid spaces you filled,
+          although the program will still try to run otherwise.</p>
+        <p>4. When you press Start the program will try to fill the board spaces with the pieces you've chosen,
+          click on Live Solve if you want to see the board filled in real time.
+        </p>
       </div>
     </div>
   </div>
