@@ -22,7 +22,7 @@
     "webpack-cli": "^3.3.12"
   },
   "scripts": {
-    "webpack": "npx webpack --config webpack.config.dev.cjs",
+    "dev": "npx webpack --config webpack.config.dev.cjs",
     "build": "npm run clean && npx webpack --config webpack.config.prod.cjs",
     "clean": "rimraf dist/prod"
   }

@@ -434,6 +434,7 @@ function reset() {
     document.getElementById("iterations").style.visibility = 'hidden';
     document.getElementById("time").style.visibility = 'hidden';
     document.getElementById("failText").style.visibility = 'hidden';
+    pieceHistory = [];
     state = states.START;
 }
 
