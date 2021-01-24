@@ -22,15 +22,15 @@ module.exports = {
             },
             {
                 test: /\.css$/,
-                loader: [
-                  'style-loader',
-                  'css-loader'
+                use: [
+                    'style-loader',
+                    'css-loader'
                 ]
             }
         ]
     },
     optimization: {
-        moduleIds: 'hashed',
+        moduleIds: 'deterministic',
         runtimeChunk: 'single',
         splitChunks: {
             cacheGroups: {

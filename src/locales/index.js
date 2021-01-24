@@ -1,7 +1,7 @@
-import en from './en';
-import ko from './ko';
-import ja from './ja';
-import tw from './tw';
+import en from './en.js';
+import ko from './ko.js';
+import ja from './ja.js';
+import tw from './tw.js';
 
 export default {
     GMS: en,

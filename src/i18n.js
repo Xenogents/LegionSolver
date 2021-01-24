@@ -1,4 +1,4 @@
-import locales from './locales/index';
+import locales from './locales/index.js';
 
 let _cr = getCurrentLanguage();
 
