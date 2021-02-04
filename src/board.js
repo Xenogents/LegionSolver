@@ -439,33 +439,38 @@ function reset() {
 }
 
 async function handleButton(evt) {
-    if (state == states.START) {
-        evt.target.innerText = i18n("pause");
-        document.getElementById("clearBoard").disabled = true;
-        state = states.RUNNING;
-        let success = await runSolver();
-        if (!success) {
-          document.getElementById("failText").style.visibility = 'visible';
-        }
-        evt.target.innerText = i18n("reset");
-        state = states.COMPLETED;
-    } else if (state == states.RUNNING) {
-        evt.target.innerText = i18n("continue");
-        for (let solvers of legionSolvers) {
-            solvers.pause();
-        }
-        state = states.PAUSED;
-        document.getElementById("resetButton").style.visibility = 'visible';
-    } else if (state == states.PAUSED) {
-        evt.target.innerText = i18n("pause");
-        pieceHistory = [];
-        for (let solvers of legionSolvers) {
-            solvers.continue();
-        }
-        state = states.RUNNING
-        document.getElementById("resetButton").style.visibility = 'hidden';
-    } else if (state == states.COMPLETED) {
-        reset();
+    switch (state) {
+        case states.START:
+            evt.target.innerText = i18n("pause");
+            document.getElementById("clearBoard").disabled = true;
+            state = states.RUNNING;
+            let success = await runSolver();
+            if (!success) {
+              document.getElementById("failText").style.visibility = 'visible';
+            }
+            evt.target.innerText = i18n("reset");
+            state = states.COMPLETED;
+            break;
+        case states.RUNNING:
+            evt.target.innerText = i18n("continue");
+            for (let solvers of legionSolvers) {
+                solvers.pause();
+            }
+            state = states.PAUSED;
+            document.getElementById("resetButton").style.visibility = 'visible';
+            break;
+        case states.PAUSED:
+            evt.target.innerText = i18n("pause");
+            pieceHistory = [];
+            for (let solvers of legionSolvers) {
+                solvers.continue();
+            }
+            state = states.RUNNING
+            document.getElementById("resetButton").style.visibility = 'hidden';
+            break;
+        case states.COMPLETED:
+            reset();
+            break;
     }
 }
 

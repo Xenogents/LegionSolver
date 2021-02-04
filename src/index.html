@@ -5,11 +5,11 @@
   <% } %>
   <meta charset="utf-8">
 </head>
-<body id = "body">
+<body id="body">
   <div id="header">
     <select id="languageSelectBox">
       <% for(var i=0; i < htmlWebpackPlugin.options.languages.length; i++) {%>
-        <% const lang = htmlWebpackPlugin.options.languages[i] %>
+        <% const lang=htmlWebpackPlugin.options.languages[i] %>
         <option id="<%= lang %>" value="<%= lang %>"><%= lang %></option>
       <% } %>
     </select>
@@ -19,7 +19,7 @@
   <div id="legionWrapper" class="centerMiddleChild">
     <div id="pieceForm">
       <form></form>
-      <button id = "clearPieces">Clear Pieces</button>
+      <button id="clearPieces">Clear Pieces</button>
     </div>
     <div id="legion">
       <table id="legionBoard">
@@ -35,7 +35,7 @@
           </div>
           <button id="clearBoard">Clear Board</button>
         </div>
-        <div id = "middlelabels">
+        <div id="middlelabels">
           <button id="boardButton">Start</button>
           <button id="resetButton">Reset</button>
           <div id="failText"></div>
@@ -46,22 +46,23 @@
             <label for="bigClick">Region Click</label>
             <input type="checkbox" id="liveSolve"></input>
             <label for="liveSolve">Live Solve</label>
-            <div id = "darkModeLabel"><input type="checkbox" id="darkMode"></input>
+            <div id="darkModeLabel"><input type="checkbox" id="darkMode"></input>
             <label for="darkMode">Dark Mode</label></div>
           </div>
           <div id="iterationTime">
-            <div id = "iterations">
+            <div id="iterations">
               Iterations: <span id="iterationsValue"></span>
             </div>
-            <div id = "time">
+            <div id="time">
               Time: <span id="timeValue"></span>
             </div>
           </div>
         </div>
       </div>
     </div>
-    <div id="instructions" style = 'font-size:20px'>Instructions:
-      <div id="paragraph" style = 'font-size:16px'>
+    <div id="instructions">
+      <h2>Instructions:</h2>
+      <div id="paragraph">
         <p>1. Click the grid spaces you want to be filled, the region click will help you fill it in faster.</p>
         <p>2. Input the amount of each shape you want to be filled in the board.</p>
         <p>3. The space that the pieces take up should equal the amount of grid spaces you filled,
