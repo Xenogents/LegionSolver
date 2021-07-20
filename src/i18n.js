@@ -17,6 +17,7 @@ function getRegionByBrowserLanguage() {
         case 'en': resultRegion = 'GMS'; break;
         case 'ko': resultRegion = 'KMS'; break;
         case 'ja': resultRegion = 'JMS'; break;
+        case 'cn': resultRegion = 'CMS'; break;
 
         default: resultRegion = null; break;
     }
