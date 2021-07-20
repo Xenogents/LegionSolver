@@ -1,7 +1,7 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 
-const languages = ['GMS', 'KMS', 'JMS', 'TMS'];
+const languages = ['GMS', 'KMS', 'JMS', 'TMS', 'CMS'];
 
 module.exports = {
     entry: './src/main.js',
