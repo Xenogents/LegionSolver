@@ -8,6 +8,7 @@ export default {
 
   spacesToBeFilled: '可填入區塊數: ',
   boardSpacesFilled: '可使用區塊數: ',
+  currentCaracterCountFiled : "當前使用的角色數量: ",
   iterations: '嘗試次數: ',
   time: '花費時間: ',
 

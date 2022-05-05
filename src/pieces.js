@@ -204,6 +204,7 @@ if (hasLabPieces()) {
 }
 
 let currentPieces = 0;
+let currentUseCaracterCount = 0;
 if (localStorage.getItem("currentPieces")) {
     currentPieces = JSON.parse(localStorage.getItem("currentPieces"));
     document.getElementById('currentPiecesValue').innerText = `${currentPieces}`;
@@ -226,11 +227,13 @@ function updateCurrentPieces() {
     }
 
     currentPieces = sumBy(pieces, piece => piece.cellCount * piece.amount);
+    currentUseCaracterCount = sumBy(pieces, (piece) => piece.amount);
 
     localStorage.setItem("pieceAmounts", JSON.stringify(pieces.map(piece => piece.amount)));
     localStorage.setItem("currentPieces", JSON.stringify(currentPieces));
 
     document.getElementById('currentPiecesValue').innerText = `${currentPieces}`;
+    document.getElementById("currentCaracterCountValue").innerText = `${currentUseCaracterCount}`;
 }
 
 document.getElementById("clearPieces").addEventListener("click", clearPieces);

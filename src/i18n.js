@@ -41,6 +41,7 @@ getTextNodesIn(document.getElementById('paragraph'))[2].textContent = i18n('inst
 getTextNodesIn(document.getElementById('paragraph'))[3].textContent = i18n('instructionsSub4');
 getTextNodesIn(document.getElementById('currentPieces'))[0].textContent = i18n('spacesToBeFilled');
 getTextNodesIn(document.getElementById('boardFilled'))[0].textContent = i18n('boardSpacesFilled');
+getTextNodesIn(document.getElementById('currentCaracterCount'))[0].textContent = i18n('currentCaracterCountFiled');
 getTextNodesIn(document.getElementById('iterations'))[0].textContent = i18n('iterations');
 getTextNodesIn(document.getElementById('time'))[0].textContent = i18n('time');
 
