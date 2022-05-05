@@ -72,6 +72,10 @@ form {
     margin-bottom: 7px;
 }
 
+#currentCaracterCount {
+    margin-bottom: 7px;
+}
+
 #middlelabels {
     display: flex;
     flex-direction: column;

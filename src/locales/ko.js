@@ -8,6 +8,7 @@ export default {
 
     spacesToBeFilled: '유니온 캐릭터 산정된 공간: ',
     boardSpacesFilled: '유니온 지도 선택된 공간: ',
+    currentCaracterCountFiled : "현재 사용 중인 문자 수: ",
     iterations: '반복횟수: ',
     time: '소요시간: ',
 

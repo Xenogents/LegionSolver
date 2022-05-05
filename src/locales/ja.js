@@ -9,6 +9,7 @@ export default {
 
     spacesToBeFilled: 'キャラクターの算定された空間: ',
     boardSpacesFilled: 'マップの選択された空間: ',
+    currentCaracterCountFiled : "現在使用されている役割の数: ",
     iterations: '繰り返した数: ',
     time: '所要時間: ',
 

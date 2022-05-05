@@ -8,6 +8,7 @@ export default {
 
     spacesToBeFilled: 'Spaces to be Filled: ',
     boardSpacesFilled: 'Board Spaces Filled: ',
+    currentCaracterCountFiled : "Number of Characters: ",
     iterations: 'Iterations: ',
     time: 'Time: ',
 
