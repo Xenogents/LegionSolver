@@ -92,6 +92,13 @@ const defaultPieces = [
         [0, 2, 0],
         [0, 1, 1]
     ],
+
+    // Abyssal Expedition
+    [
+        [1, 0, 0],
+        [1, 2, 0],
+        [0, 1, 1]
+    ],
 ];
 
 const gmsPieces = [
@@ -133,24 +140,25 @@ let pieceColours = new Map();
 pieceColours.set(-1, 'white');
 pieceColours.set(0, 'grey');
 for (let i = 0; i < 2; i++) {
-    pieceColours.set(1 + i * 18, 'lightpink');
-    pieceColours.set(2 + i * 18, 'lightcoral');
-    pieceColours.set(3 + i * 18, 'indianred');
-    pieceColours.set(4 + i * 18, 'darkseagreen');
-    pieceColours.set(5 + i * 18, 'firebrick');
-    pieceColours.set(6 + i * 18, 'mediumseagreen');
-    pieceColours.set(7 + i * 18, 'purple');
-    pieceColours.set(8 + i * 18, 'dodgerblue');
-    pieceColours.set(9 + i * 18, 'lightsteelblue');
-    pieceColours.set(10 + i * 18, 'maroon');
-    pieceColours.set(11 + i * 18, 'green');
-    pieceColours.set(12 + i * 18, 'indigo');
-    pieceColours.set(13 + i * 18, 'blue');
-    pieceColours.set(14 + i * 18, 'cadetblue');
-    pieceColours.set(15 + i * 18, 'mediumpurple');
-    pieceColours.set(16 + i * 18, 'aquamarine');
-    pieceColours.set(17 + i * 18, 'aquamarine');
-    pieceColours.set(18 + i * 18, 'aquamarine');
+    pieceColours.set(1 + i * 19, 'lightpink');
+    pieceColours.set(2 + i * 19, 'lightcoral');
+    pieceColours.set(3 + i * 19, 'indianred');
+    pieceColours.set(4 + i * 19, 'darkseagreen');
+    pieceColours.set(5 + i * 19, 'firebrick');
+    pieceColours.set(6 + i * 19, 'mediumseagreen');
+    pieceColours.set(7 + i * 19, 'purple');
+    pieceColours.set(8 + i * 19, 'dodgerblue');
+    pieceColours.set(9 + i * 19, 'lightsteelblue');
+    pieceColours.set(10 + i * 19, 'maroon');
+    pieceColours.set(11 + i * 19, 'green');
+    pieceColours.set(12 + i * 19, 'indigo');
+    pieceColours.set(13 + i * 19, 'blue');
+    pieceColours.set(14 + i * 19, 'cadetblue');
+    pieceColours.set(15 + i * 19, 'mediumpurple');
+    pieceColours.set(16 + i * 19, 'green');
+    pieceColours.set(17 + i * 19, 'aquamarine');
+    pieceColours.set(18 + i * 19, 'aquamarine');
+    pieceColours.set(19 + i * 19, 'aquamarine');
 }
 
 for (let i = 0; i < pieces.length; i++) {
@@ -196,11 +204,12 @@ document.getElementById('pieceDescription12').textContent = i18n('thief250');
 document.getElementById('pieceDescription13').textContent = i18n('mage250');
 document.getElementById('pieceDescription14').textContent = i18n('pirate250');
 document.getElementById('pieceDescription15').textContent = i18n('xenon250');
+document.getElementById('pieceDescription16').textContent = i18n('abyssalExpedition');
 
 if (hasLabPieces()) {
-    document.getElementById('pieceDescription16').textContent = i18n('enhancedLab200');
-    document.getElementById('pieceDescription17').textContent = i18n('enhancedLab250');
-    document.getElementById('pieceDescription18').textContent = i18n('lab250');
+    document.getElementById('pieceDescription17').textContent = i18n('enhancedLab200');
+    document.getElementById('pieceDescription18').textContent = i18n('enhancedLab250');
+    document.getElementById('pieceDescription19').textContent = i18n('lab250');
 }
 
 let currentPieces = 0;

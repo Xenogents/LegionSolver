@@ -49,6 +49,7 @@ export default {
     mage250: 'Lvl 250 마법사',
     pirate250: 'Lvl 250 해적',
     xenon250: 'Lvl 250 제논',
+    abyssalExpedition: 'Abyssal Expedition',
 
     /** special jobs */
     enhancedLab200: 'Lvl 200 Enhanced Lab',
