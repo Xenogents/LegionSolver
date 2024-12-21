@@ -66,7 +66,7 @@ const defaultPieces = [
         [1, 1, 2, 1, 1],
     ],
 
-    // Lvl 250 Thief
+    // Lvl 250 Thief/Ride or Die
     [
         [0, 0, 1],
         [1, 2, 1],
@@ -80,7 +80,7 @@ const defaultPieces = [
         [0, 1, 0]
     ],
 
-    // Lvl 250 Pirate
+    // Lvl 250 Pirate/Abyssal
     [
         [1, 2, 0, 0],
         [0, 1, 1, 1]

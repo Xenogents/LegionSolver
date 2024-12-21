@@ -45,9 +45,9 @@ export default {
     // Lvl: 250
     warrior250: 'Lvl 250 Warrior',
     archer250: 'Lvl 250 Archer',
-    thief250: 'Lvl 250 Thief',
+    thief250: 'Lvl 250 Thief/Ride or Die',
     mage250: 'Lvl 250 Mage',
-    pirate250: 'Lvl 250 Pirate',
+    pirate250: 'Lvl 250 Pirate/Abyssal',
     xenon250: 'Lvl 250 Xenon',
 
     /** special jobs */
